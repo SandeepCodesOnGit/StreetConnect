@@ -11,7 +11,7 @@ import {
   faSpinner,
   faUtensils, // 🚨 NEW: Added the utensils icon for the image fallback
 } from "@fortawesome/free-solid-svg-icons";
-import { useCart } from "../context/cartContext";
+import { useCart } from "../context/CartContext";
 import api from "../api/axios";
 import { useVendor } from "../hooks/useVendor";
 
