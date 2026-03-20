@@ -24,11 +24,11 @@ main().then((res) => {
 });
 
 async function main() {
-    await mongoose.connect("mongodb://127.0.0.1:27017/streetConnect");
+    await mongoose.connect(process.env.MONGO_URI);
 }
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 }));
