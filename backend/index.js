@@ -15,7 +15,7 @@ const app = express();
 const server = createServer(app);
 const io = connectToSocket(server);
 
-app.set('trust proxy', 1);
+// app.set('trust proxy', 1);
 app.set("io", io);
 
 main().then((res) => {
@@ -34,8 +34,8 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 app.use(cookieParser());
-app.use(express.json({limit: "40Kb"}));
-app.use(express.urlencoded({extended: true, limit: "40Kb"}));
+app.use(express.json({}));
+app.use(express.urlencoded({extended: true}));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/vendors", vendorRoutes);

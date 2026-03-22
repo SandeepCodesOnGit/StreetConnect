@@ -13,8 +13,8 @@ const sendCookie = (user, role, statusCode, res) => {
     const cookieOptions = {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         httpOnly: true,
-        secure: true,
-        sameSite: 'none',
+        secure: false,
+        sameSite: 'lax',
     };
 
     res.status(statusCode).cookie("token", token, cookieOptions).json({
@@ -84,7 +84,6 @@ const signup = async (req, res) => {
     }
 
     const user = await Model.create(newUserData);
-    console.log(user);
     sendCookie(user, role, 201, res);
 }
 

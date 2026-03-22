@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import api from "../api/axios";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useNearbyVendors } from "../hooks/useNearbyVendors";
+import { useAuth } from "../context/AuthContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faStoreSlash,
   faStar,
   faSpinner,
+  faMapLocationDot
 } from "@fortawesome/free-solid-svg-icons";
 
 // --- 1. DEFINE THE LIVE (GREEN) ICON (SMALLER) ---
@@ -61,12 +62,15 @@ const NearbyVendors = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Grab coordinates from the URL, or fallback to Lucknow for testing
-  //   const lat = searchParams.get("lat") || 26.8467;
-  //   const lng = searchParams.get("lng") || 80.9462;
+  const { user } = useAuth();
 
-  const lat = 26;
-  const lng = 80;
+  // Grab coordinates from the URL, or fallback to Lucknow for testing
+    const lat = searchParams.get("lat") || 26.8467;
+    const lng = searchParams.get("lng") || 80.9462;
+  
+
+  // const lat = 26;
+  // const lng = 80;
 
   const [showOnlyLive, setShowOnlyLive] = useState(false);
   const { vendors, loading, error } = useNearbyVendors(lat, lng);
@@ -143,44 +147,70 @@ const NearbyVendors = () => {
                 </p>
               </div>
             ) : (
-              displayedVendors.map((vendor) => (
+             displayedVendors.map((vendor) => (
                 <div
                   key={vendor._id}
-                  onClick={() => navigate(`/vendor/${vendor._id}`)}
-                  className="group flex gap-4 p-4 border border-gray-100 rounded-2xl hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 transition-all cursor-pointer bg-white"
+                  className="group flex flex-col p-4 border border-gray-100 rounded-2xl hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 transition-all bg-white"
                 >
-                  <div className="w-20 h-20 bg-gray-100 rounded-xl shrink-0 relative overflow-hidden">
-                    <span
-                      className={`absolute top-1 left-1 px-2 py-0.5 text-[9px] font-black rounded-md text-white z-10 ${vendor.isLive ? "bg-green-500 animate-pulse" : "bg-gray-400"}`}
-                    >
-                      {vendor.isLive ? "LIVE" : "OFFLINE"}
-                    </span>
-                    <img
-                      src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200"
-                      alt="shop"
-                      className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="flex flex-col justify-center">
-                    <p className="text-[10px] uppercase text-orange-500 font-black tracking-widest mb-1">
-                      {vendor.category}
-                    </p>
-                    <h4 className="font-bold text-gray-900 text-base mb-1">
-                      {vendor.shopName}
-                    </h4>
-                    <div className="flex items-center text-xs text-gray-500 gap-2">
-                      <span className="text-yellow-500 font-bold">
-                        <FontAwesomeIcon icon={faStar} className="mr-1" />{" "}
-                        {vendor.rating || "New"}
+                  <div className="flex gap-4 cursor-pointer" onClick={() => navigate(`/vendor/${vendor._id}`)}>
+                    <div className="w-20 h-20 bg-gray-100 rounded-xl shrink-0 relative overflow-hidden">
+                      <span
+                        className={`absolute top-1 left-1 px-2 py-0.5 text-[9px] font-black rounded-md text-white z-10 ${vendor.isLive ? "bg-green-500 animate-pulse" : "bg-gray-400"}`}
+                      >
+                        {vendor.isLive ? "LIVE" : "OFFLINE"}
                       </span>
+                      <img
+                        src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200"
+                        alt="shop"
+                        className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-center flex-1">
+                      <p className="text-[10px] uppercase text-orange-500 font-black tracking-widest mb-1">
+                        {vendor.category}
+                      </p>
+                      <h4 className="font-bold text-gray-900 text-base mb-1">
+                        {vendor.shopName}
+                      </h4>
+                      <div className="flex items-center text-xs text-gray-500 gap-2">
+                        <span className="text-yellow-500 font-bold">
+                          <FontAwesomeIcon icon={faStar} className="mr-1" />{" "}
+                          {vendor.rating || "New"}
+                        </span>
+                      </div>
                     </div>
                   </div>
+
+                  {/* 🚨 UPDATED: Buttons in Sidebar */}
+                  <div className="mt-3 pt-3 border-t border-gray-50 flex gap-2">
+                    {/* Only show Track Live if vendor is Live AND user is logged in AND user is not a vendor */}
+                    {vendor.isLive && user && user.role !== 'vendor' && (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/track/${vendor._id}`);
+                        }}
+                        className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-2 rounded-xl text-xs font-bold transition flex justify-center items-center gap-2"
+                      >
+                        <FontAwesomeIcon icon={faMapLocationDot} /> Track Live
+                      </button>
+                    )}
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/vendor/${vendor._id}`);
+                      }}
+                      className="flex-1 bg-orange-100 hover:bg-orange-500 hover:text-white text-orange-600 py-2 rounded-xl text-xs font-bold transition"
+                    >
+                      View Menu
+                    </button>
+                  </div>
+
                 </div>
               ))
             )}
           </div>
         </div>
-
         {/* MAP */}
         <div className="w-full lg:w-2/3 bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden h-125 lg:h-[calc(100vh-120px)] relative z-0">
           <MapContainer
@@ -214,15 +244,23 @@ const NearbyVendors = () => {
                     <strong className="block text-gray-900 text-base mb-1">
                       {vendor.shopName}
                     </strong>
-                    <p className="text-xs text-gray-500 mb-3">
-                      {vendor.category}
-                    </p>
-                    <button
-                      onClick={() => navigate(`/vendor/${vendor._id}`)}
-                      className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-xs font-bold w-full transition-colors"
-                    >
-                      VIEW MENU
-                    </button>
+                    <div className="flex flex-col gap-2 mt-2">
+                      {/* 🚨 UPDATED: Button inside Map Popup */}
+                      {vendor.isLive && user && user.role !== 'vendor' && (
+                        <button 
+                          onClick={() => navigate(`/track/${vendor._id}`)} 
+                          className="bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-bold w-full flex justify-center items-center gap-2"
+                        >
+                          <FontAwesomeIcon icon={faMapLocationDot} /> Track Live
+                        </button>
+                      )}
+                      <button 
+                        onClick={() => navigate(`/vendor/${vendor._id}`)} 
+                        className="bg-orange-500 text-white px-4 py-2 rounded-lg text-xs font-bold w-full"
+                      >
+                        VIEW MENU
+                      </button>
+                    </div>
                   </div>
                 </Popup>
               </Marker>

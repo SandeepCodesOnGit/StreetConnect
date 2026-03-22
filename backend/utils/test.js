@@ -6,304 +6,515 @@ dotenv.config();
 
 const vendorData = [
   {
-    "username": "sharma_chaat",
-    "email": "sharma@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543210",
+    "username": "iiit_canteen_king",
+    "shopName": "Jhalwa Hotspot",
+    "email": "canteen@iiita.ac.in",
+    "password": "hashedpassword101",
+    "phone": "9876543001",
     "role": "vendor",
-    "shopName": "Sharma Ji Ki Special Chaat",
     "category": "Food",
     "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9462, 26.8467] },
-    "rating": 4.8,
-    "menu": [
-      { "name": "Aloo Tikki", "price": 40, "description": "Crispy potato patties", "isAvailable": true },
-      { "name": "Pani Puri", "price": 30, "description": "6 pieces of spicy water balls", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "verma_veggies",
-    "email": "verma@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543211",
-    "role": "vendor",
-    "shopName": "Verma Fresh Vegetables",
-    "category": "Vegetables",
-    "isLive": false,
-    "location": { "type": "Point", "coordinates": [80.9485, 26.8490] },
+    "location": { "type": "Point", "coordinates": [81.7705, 25.4295] },
     "rating": 4.5,
     "menu": [
-      { "name": "Organic Tomatoes", "price": 40, "description": "1kg fresh farm tomatoes", "isAvailable": true }
+      { "name": "Cheese Maggi", "price": 45, "description": "Exam night fuel", "isAvailable": true },
+      { "name": "Veg Grilled Sandwich", "price": 50, "description": "Crispy and fresh", "isAvailable": true },
+      { "name": "Cold Coffee", "price": 60, "description": "With chocolate syrup", "isAvailable": true }
     ]
   },
   {
-    "username": "royal_nonveg",
-    "email": "royal@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543212",
+    "username": "sharma_tea_iiit",
+    "shopName": "Sharma Ji Ki Tapri",
+    "email": "sharma@jhalwa.com",
+    "password": "hashedpassword102",
+    "phone": "9876543002",
     "role": "vendor",
-    "shopName": "Royal Kabab Corner",
     "category": "Food",
     "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9430, 26.8420] },
-    "rating": 4.9,
+    "location": { "type": "Point", "coordinates": [81.7720, 25.4302] },
+    "rating": 4.8,
     "menu": [
-      { "name": "Galouti Kabab", "price": 120, "description": "Famous melt-in-mouth kababs", "isAvailable": true }
+      { "name": "Adrak Chai", "price": 10, "description": "Fresh ginger tea", "isAvailable": true },
+      { "name": "Bun Makkhan", "price": 25, "description": "Freshly buttered bun", "isAvailable": true },
+      { "name": "Samosa", "price": 12, "description": "Classic potato filling", "isAvailable": true }
     ]
   },
   {
-    "username": "gupta_fruits",
-    "email": "gupta@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543213",
+    "username": "pantry_plus",
+    "shopName": "The Student Pantry",
+    "email": "pantry@prayagraj.com",
+    "password": "hashedpassword103",
+    "phone": "9876543003",
     "role": "vendor",
-    "shopName": "Gupta Fruit Stall",
-    "category": "Fruits",
+    "category": "Food",
     "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9500, 26.8500] },
+    "location": { "type": "Point", "coordinates": [81.7735, 25.4310] },
     "rating": 4.2,
     "menu": [
-      { "name": "Seasonal Mangoes", "price": 80, "description": "1kg Dussehri Mangoes", "isAvailable": true }
+      { "name": "Veg Burger", "price": 45, "description": "Potato patty with mayo", "isAvailable": true },
+      { "name": "French Fries", "price": 60, "description": "Salted golden fries", "isAvailable": true },
+      { "name": "Lemon Ice Tea", "price": 40, "description": "Refreshing and chilled", "isAvailable": true }
     ]
   },
   {
-    "username": "momo_king",
-    "email": "momo@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543214",
+    "username": "jhalwa_bites",
+    "shopName": "Jhalwa Food Court",
+    "email": "admin@jhalwabites.com",
+    "password": "hashedpassword104",
+    "phone": "9876543004",
     "role": "vendor",
-    "shopName": "Momo King Lucknow",
-    "category": "Food",
-    "isLive": false,
-    "location": { "type": "Point", "coordinates": [80.9410, 26.8450] },
-    "rating": 4.6,
-    "menu": [
-      { "name": "Paneer Momos", "price": 60, "description": "8 pieces steamed", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "tiwari_sweets",
-    "email": "tiwari@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543215",
-    "role": "vendor",
-    "shopName": "Tiwari Jalebi Bhandar",
     "category": "Food",
     "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9550, 26.8520] },
-    "rating": 4.7,
+    "location": { "type": "Point", "coordinates": [81.7712, 25.4288] },
+    "rating": 3.9,
     "menu": [
-      { "name": "Hot Jalebi", "price": 50, "description": "250g crispy sweet rings", "isAvailable": true }
+      { "name": "Chicken Roll", "price": 80, "description": "Kolkata style", "isAvailable": true },
+      { "name": "Egg Roll", "price": 50, "description": "Double egg", "isAvailable": true },
+      { "name": "Paneer Tikka Roll", "price": 90, "description": "Spicy paneer filling", "isAvailable": true }
     ]
   },
   {
-    "username": "khanna_repair",
-    "email": "khanna@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543216",
+    "username": "momo_nation_alld",
+    "shopName": "Momo Nation",
+    "email": "momo@jhalwa.com",
+    "password": "hashedpassword105",
+    "phone": "9876543005",
     "role": "vendor",
-    "shopName": "Khanna Mobile Repair",
-    "category": "Other",
-    "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9400, 26.8380] },
-    "rating": 4.3,
-    "menu": [
-      { "name": "Screen Guard", "price": 99, "description": "Tempered glass installation", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "pappu_chai",
-    "email": "pappu@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543217",
-    "role": "vendor",
-    "shopName": "Pappu Cutting Chai",
     "category": "Food",
     "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9470, 26.8460] },
+    "location": { "type": "Point", "coordinates": [81.7690, 25.4320] },
     "rating": 4.4,
     "menu": [
-      { "name": "Masala Tea", "price": 10, "description": "Hot ginger tea", "isAvailable": true }
+      { "name": "Veg Steamed Momos", "price": 60, "description": "8 pieces with chutney", "isAvailable": true },
+      { "name": "Fried Momos", "price": 80, "description": "Crispy fried", "isAvailable": true },
+      { "name": "Paneer Steam Momos", "price": 100, "description": "Soft paneer chunks", "isAvailable": true },
+      { "name": "Kurkure Momos", "price": 120, "description": "Extra crunchy", "isAvailable": true }
     ]
   },
   {
-    "username": "singh_lassi",
-    "email": "singh@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543218",
+    "username": "sangam_sweets",
+    "shopName": "Sangam Delights",
+    "email": "sweets@prayagraj.in",
+    "password": "hashedpassword106",
+    "phone": "9876543006",
     "role": "vendor",
-    "shopName": "Singh Punjabi Lassi",
     "category": "Food",
     "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9440, 26.8475] },
-    "rating": 4.8,
+    "location": { "type": "Point", "coordinates": [81.7750, 25.4335] },
+    "rating": 4.6,
     "menu": [
-      { "name": "Sweet Lassi", "price": 40, "description": "Kulhad lassi with malai", "isAvailable": true }
+      { "name": "Gulab Jamun", "price": 30, "description": "Hot and fresh (2pcs)", "isAvailable": true },
+      { "name": "Rasmalai", "price": 50, "description": "Soft and milky", "isAvailable": true },
+      { "name": "Jalebi", "price": 40, "description": "Pure desi ghee", "isAvailable": true }
     ]
   },
   {
-    "username": "mishra_paan",
-    "email": "mishra@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543219",
+    "username": "engineers_cafe",
+    "shopName": "The Debug Cafe",
+    "email": "debug@iiit.com",
+    "password": "hashedpassword107",
+    "phone": "9876543007",
     "role": "vendor",
-    "shopName": "Mishra Banarsi Paan",
-    "category": "Other",
+    "category": "Food",
     "isLive": false,
-    "location": { "type": "Point", "coordinates": [80.9490, 26.8430] },
-    "rating": 4.5,
-    "menu": [
-      { "name": "Meetha Paan", "price": 25, "description": "Authentic sweet betel leaf", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "lucky_burger",
-    "email": "lucky@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543220",
-    "role": "vendor",
-    "shopName": "Lucky Egg Burger",
-    "category": "Food",
-    "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9455, 26.8465] },
+    "location": { "type": "Point", "coordinates": [81.7710, 25.4275] },
     "rating": 4.1,
     "menu": [
-      { "name": "Egg Burger", "price": 45, "description": "Street style spicy burger", "isAvailable": true }
+      { "name": "Cappuccino", "price": 80, "description": "Frothy coffee", "isAvailable": true },
+      { "name": "Iced Latte", "price": 90, "description": "Vanilla flavored", "isAvailable": true },
+      { "name": "Brownie", "price": 70, "description": "With hot chocolate", "isAvailable": true }
     ]
   },
   {
-    "username": "fresh_juice",
-    "email": "juice@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543221",
+    "username": "paratha_house_alld",
+    "shopName": "Aloo Paratha Junction",
+    "email": "paratha@jhalwa.com",
+    "password": "hashedpassword108",
+    "phone": "9876543008",
     "role": "vendor",
-    "shopName": "Pure Fresh Juices",
-    "category": "Fruits",
-    "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9520, 26.8480] },
-    "rating": 4.6,
-    "menu": [
-      { "name": "Mix Fruit Juice", "price": 50, "description": "Freshly squeezed", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "south_indian",
-    "email": "dosa@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543222",
-    "role": "vendor",
-    "shopName": "Anna Dosa Point",
     "category": "Food",
     "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9425, 26.8455] },
-    "rating": 4.7,
-    "menu": [
-      { "name": "Masala Dosa", "price": 70, "description": "Crispy dosa with chutney", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "fancy_bangles",
-    "email": "bangles@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543223",
-    "role": "vendor",
-    "shopName": "Fancy Bangle Store",
-    "category": "Other",
-    "isLive": false,
-    "location": { "type": "Point", "coordinates": [80.9515, 26.8410] },
-    "rating": 4.0,
-    "menu": [
-      { "name": "Glass Bangles", "price": 120, "description": "Set of 12 colorful bangles", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "sardar_paratha",
-    "email": "paratha@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543224",
-    "role": "vendor",
-    "shopName": "Sardar Ji Ke Parathe",
-    "category": "Food",
-    "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9445, 26.8495] },
-    "rating": 4.8,
-    "menu": [
-      { "name": "Paneer Paratha", "price": 60, "description": "Large butter stuffed paratha", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "online_veg",
-    "email": "onlineveg@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543225",
-    "role": "vendor",
-    "shopName": "Smart Veggie Cart",
-    "category": "Vegetables",
-    "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9535, 26.8530] },
-    "rating": 4.5,
-    "menu": [
-      { "name": "Potato Bag", "price": 100, "description": "5kg fresh potatoes", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "biryani_house",
-    "email": "biryani@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543226",
-    "role": "vendor",
-    "shopName": "Lucknowi Biryani Point",
-    "category": "Food",
-    "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9475, 26.8425] },
-    "rating": 4.9,
-    "menu": [
-      { "name": "Chicken Biryani", "price": 150, "description": "Half plate authentic biryani", "isAvailable": true }
-    ]
-  },
-  {
-    "username": "sunny_snacks",
-    "email": "snacks@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543227",
-    "role": "vendor",
-    "shopName": "Sunny Snacks & Samosas",
-    "category": "Food",
-    "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9482, 26.8458] },
+    "location": { "type": "Point", "coordinates": [81.7700, 25.4305] },
     "rating": 4.3,
     "menu": [
-      { "name": "Paneer Samosa", "price": 15, "description": "Big crispy samosa", "isAvailable": true }
+      { "name": "Aloo Pyaz Paratha", "price": 50, "description": "With curd", "isAvailable": true },
+      { "name": "Paneer Paratha", "price": 80, "description": "Stuffed with paneer", "isAvailable": true },
+      { "name": "Gobi Paratha", "price": 60, "description": "Seasonal cauliflower", "isAvailable": true }
     ]
   },
   {
-    "username": "cool_kulfi",
-    "email": "kulfi@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543228",
+    "username": "dosa_plaza_jhalwa",
+    "shopName": "South Express",
+    "email": "south@alld.com",
+    "password": "hashedpassword109",
+    "phone": "9876543009",
     "role": "vendor",
-    "shopName": "Matka Kulfi Corner",
     "category": "Food",
     "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9438, 26.8488] },
-    "rating": 4.6,
+    "location": { "type": "Point", "coordinates": [81.7725, 25.4290] },
+    "rating": 4.0,
     "menu": [
-      { "name": "Malai Kulfi", "price": 30, "description": "Traditional pot kulfi", "isAvailable": true }
+      { "name": "Masala Dosa", "price": 80, "description": "Traditional style", "isAvailable": true },
+      { "name": "Idli Sambar", "price": 40, "description": "Soft steamed (2pcs)", "isAvailable": true },
+      { "name": "Vada Sambhar", "price": 50, "description": "Crispy dal vadas", "isAvailable": true }
     ]
   },
   {
-    "username": "mega_repair",
-    "email": "mega@lucknow.com",
-    "password": "hashedpassword123",
-    "phone": "9876543229",
+    "username": "burger_lab",
+    "shopName": "The Burger Lab",
+    "email": "lab@jhalwa.com",
+    "password": "hashedpassword110",
+    "phone": "9876543010",
     "role": "vendor",
-    "shopName": "Mega Shoe Laundry",
-    "category": "Other",
+    "category": "Food",
     "isLive": true,
-    "location": { "type": "Point", "coordinates": [80.9510, 26.8510] },
+    "location": { "type": "Point", "coordinates": [81.7745, 25.4325] },
+    "rating": 4.5,
+    "menu": [
+      { "name": "Cheese Burger", "price": 110, "description": "Extra cheese slice", "isAvailable": true },
+      { "name": "Crispy Chicken Burger", "price": 140, "description": "Deep fried chicken", "isAvailable": true },
+      { "name": "Peri Peri Fries", "price": 80, "description": "Spicy seasoning", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "biryani_blues_alld",
+    "shopName": "Sangam Biryani",
+    "email": "biryani@prayag.com",
+    "password": "hashedpassword111",
+    "phone": "9876543011",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7685, 25.4285] },
+    "rating": 4.7,
+    "menu": [
+      { "name": "Hyderabadi Biryani", "price": 220, "description": "Served with Salan", "isAvailable": true },
+      { "name": "Egg Biryani", "price": 150, "description": "2 eggs included", "isAvailable": true },
+      { "name": "Veg Dum Biryani", "price": 130, "description": "Slow cooked veggies", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "juice_vibes",
+    "shopName": "Healthy Vibes Juice",
+    "email": "health@jhalwa.com",
+    "password": "hashedpassword112",
+    "phone": "9876543012",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7715, 25.4315] },
+    "rating": 4.2,
+    "menu": [
+      { "name": "Orange Juice", "price": 60, "description": "Pure orange", "isAvailable": true },
+      { "name": "Apple Juice", "price": 80, "description": "Cold pressed", "isAvailable": true },
+      { "name": "Watermelon Juice", "price": 50, "description": "Summer special", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "wrap_it_up",
+    "shopName": "Wrap It Up",
+    "email": "wrap@iiita.com",
+    "password": "hashedpassword113",
+    "phone": "9876543013",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7702, 25.4298] },
+    "rating": 4.1,
+    "menu": [
+      { "name": "Paneer Tikka Wrap", "price": 95, "description": "Whole wheat base", "isAvailable": true },
+      { "name": "Potato Wedges", "price": 60, "description": "Spicy roasted", "isAvailable": true },
+      { "name": "Chicken Wrap", "price": 120, "description": "Grilled chicken strips", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "kathi_junction_alld",
+    "shopName": "Kathi Junction Jhalwa",
+    "email": "kathi@prayag.com",
+    "password": "hashedpassword114",
+    "phone": "9876543014",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7730, 25.4308] },
     "rating": 4.4,
     "menu": [
-      { "name": "Sole Repair", "price": 150, "description": "Premium shoe stitching", "isAvailable": true }
+      { "name": "Double Egg Roll", "price": 60, "description": "Classic Kolkata style", "isAvailable": true },
+      { "name": "Egg Chicken Roll", "price": 100, "description": "Best seller", "isAvailable": true },
+      { "name": "Veg Roll", "price": 40, "description": "Mix veg filling", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "waffle_house_iiit",
+    "shopName": "The Waffle House",
+    "email": "waffle@jhalwa.com",
+    "password": "hashedpassword115",
+    "phone": "9876543015",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7740, 25.4330] },
+    "rating": 4.6,
+    "menu": [
+      { "name": "Belgian Waffle", "price": 140, "description": "Maple syrup & butter", "isAvailable": true },
+      { "name": "Nutella Waffle", "price": 180, "description": "Loaded with chocolate", "isAvailable": true },
+      { "name": "Strawberry Waffle", "price": 160, "description": "Fresh berries", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "pizza_paradise_alld",
+    "shopName": "Pizza Paradise",
+    "email": "pizza@jhalwa.com",
+    "password": "hashedpassword116",
+    "phone": "9876543016",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7708, 25.4282] },
+    "rating": 3.7,
+    "menu": [
+      { "name": "Margherita", "price": 200, "description": "Extra cheese", "isAvailable": true },
+      { "name": "Farmhouse Pizza", "price": 300, "description": "Fresh veggies", "isAvailable": true },
+      { "name": "Coke 500ml", "price": 40, "description": "Chilled beverage", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "thali_express",
+    "shopName": "Maa Annapurna Thali",
+    "email": "thali@jhalwa.com",
+    "password": "hashedpassword117",
+    "phone": "9876543017",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7695, 25.4312] },
+    "rating": 4.8,
+    "menu": [
+      { "name": "Standard Thali", "price": 80, "description": "Dal, Sabzi, 4 Roti", "isAvailable": true },
+      { "name": "Executive Thali", "price": 150, "description": "Paneer, Dal, Sweet, Rice", "isAvailable": true },
+      { "name": "Buttermilk", "price": 20, "description": "Masala Chaas", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "shake_it_up",
+    "shopName": "Shake It Up",
+    "email": "shake@prayag.com",
+    "password": "hashedpassword118",
+    "phone": "9876543018",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7722, 25.4296] },
+    "rating": 4.3,
+    "menu": [
+      { "name": "Oreo Shake", "price": 90, "description": "Extra thick", "isAvailable": true },
+      { "name": "Mango Shake", "price": 70, "description": "Fresh fruit", "isAvailable": true },
+      { "name": "KitKat Shake", "price": 100, "description": "Chocolate crunch", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "nashta_point",
+    "shopName": "Morning Nashta",
+    "email": "nashta@jhalwa.com",
+    "password": "hashedpassword119",
+    "phone": "9876543019",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7755, 25.4340] },
+    "rating": 4.0,
+    "menu": [
+      { "name": "Poha", "price": 30, "description": "Indori style", "isAvailable": true },
+      { "name": "Upma", "price": 40, "description": "Suji based", "isAvailable": true },
+      { "name": "Bread Omlette", "price": 50, "description": "2 eggs", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "chaat_bhandar_alld",
+    "shopName": "Gupta Chaat Bhandar",
+    "email": "gupta@jhalwa.com",
+    "password": "hashedpassword120",
+    "phone": "9876543020",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7718, 25.4318] },
+    "rating": 4.9,
+    "menu": [
+      { "name": "Aloo Tikki", "price": 40, "description": "Desi ghee fried", "isAvailable": true },
+      { "name": "Pani Puri", "price": 20, "description": "6 pieces", "isAvailable": true },
+      { "name": "Papdi Chaat", "price": 50, "description": "Tangy and sweet", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "pasta_la_vista",
+    "shopName": "Pasta La Vista",
+    "email": "pasta@iiita.com",
+    "password": "hashedpassword121",
+    "phone": "9876543021",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7738, 25.4322] },
+    "rating": 4.2,
+    "menu": [
+      { "name": "White Sauce Pasta", "price": 120, "description": "Creamy Alfredo", "isAvailable": true },
+      { "name": "Red Sauce Pasta", "price": 110, "description": "Spicy Arrabbiata", "isAvailable": true },
+      { "name": "Garlic Bread", "price": 60, "description": "Buttery (4pcs)", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "sandwich_central",
+    "shopName": "Sandwich Central",
+    "email": "sand@jhalwa.com",
+    "password": "hashedpassword122",
+    "phone": "9876543022",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7680, 25.4270] },
+    "rating": 3.8,
+    "menu": [
+      { "name": "Corn Cheese Sandwich", "price": 70, "description": "Sweet corn", "isAvailable": true },
+      { "name": "Paneer Junglee Sandwich", "price": 85, "description": "Spicy mashed paneer", "isAvailable": true },
+      { "name": "Aloo Masala Sandwich", "price": 40, "description": "Classic toast", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "kulfi_king_alld",
+    "shopName": "Kulfi King Jhalwa",
+    "email": "kulfi@prayag.in",
+    "password": "hashedpassword123",
+    "phone": "9876543023",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7706, 25.4328] },
+    "rating": 4.7,
+    "menu": [
+      { "name": "Pista Kulfi", "price": 40, "description": "Rich nuts", "isAvailable": true },
+      { "name": "Badam Shake", "price": 60, "description": "Chilled almond milk", "isAvailable": true },
+      { "name": "Malai Kulfi", "price": 35, "description": "Pure cream", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "chowmein_express",
+    "shopName": "Chowmein Express",
+    "email": "chow@jhalwa.com",
+    "password": "hashedpassword124",
+    "phone": "9876543024",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7728, 25.4345] },
+    "rating": 4.1,
+    "menu": [
+      { "name": "Veg Chowmein", "price": 60, "description": "Street style", "isAvailable": true },
+      { "name": "Manchurian", "price": 80, "description": "Dry or gravy", "isAvailable": true },
+      { "name": "Spring Rolls", "price": 50, "description": "Crispy (2pcs)", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "lassi_bar_iiit",
+    "shopName": "Banarasi Lassi",
+    "email": "lassi@iiita.com",
+    "password": "hashedpassword125",
+    "phone": "9876543025",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7742, 25.4285] },
+    "rating": 4.5,
+    "menu": [
+      { "name": "Kulhad Lassi", "price": 50, "description": "Thick cream", "isAvailable": true },
+      { "name": "Cold Milk", "price": 40, "description": "Kesar Badam", "isAvailable": true },
+      { "name": "Rabri", "price": 60, "description": "Traditional sweet", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "frankie_king",
+    "shopName": "Frankie Point",
+    "email": "frank@jhalwa.com",
+    "password": "hashedpassword126",
+    "phone": "9876543026",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7692, 25.4292] },
+    "rating": 4.3,
+    "menu": [
+      { "name": "Cheese Frankie", "price": 60, "description": "Loaded cheese", "isAvailable": true },
+      { "name": "Schezwan Frankie", "price": 55, "description": "Extra spicy", "isAvailable": true },
+      { "name": "Corn Frankie", "price": 50, "description": "Buttery corn", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "pav_bhaji_center",
+    "shopName": "Bombay Pav Bhaji",
+    "email": "pav@jhalwa.com",
+    "password": "hashedpassword127",
+    "phone": "9876543027",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7716, 25.4300] },
+    "rating": 4.4,
+    "menu": [
+      { "name": "Butter Pav Bhaji", "price": 80, "description": "Amul butter", "isAvailable": true },
+      { "name": "Cheese Pav Bhaji", "price": 110, "description": "Grated cheese", "isAvailable": true },
+      { "name": "Extra Pav", "price": 20, "description": "2 pieces", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "egg_it_up",
+    "shopName": "Egg Variety Corner",
+    "email": "egg@iiita.com",
+    "password": "hashedpassword128",
+    "phone": "9876543028",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7732, 25.4315] },
+    "rating": 3.9,
+    "menu": [
+      { "name": "Boiled Eggs", "price": 20, "description": "2 eggs", "isAvailable": true },
+      { "name": "Masala Omlette", "price": 40, "description": "Spicy onion tomato", "isAvailable": true },
+      { "name": "Egg Bhurji", "price": 60, "description": "With 2 pavs", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "sweet_fix_jhalwa",
+    "shopName": "Dessert Heaven",
+    "email": "fix@jhalwa.com",
+    "password": "hashedpassword129",
+    "phone": "9876543029",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7752, 25.4328] },
+    "rating": 4.6,
+    "menu": [
+      { "name": "Sizzling Brownie", "price": 120, "description": "With vanilla ice cream", "isAvailable": true },
+      { "name": "Choco Lava Cake", "price": 90, "description": "Molten chocolate", "isAvailable": true },
+      { "name": "Waffle Cone", "price": 50, "description": "2 scoops", "isAvailable": true }
+    ]
+  },
+  {
+    "username": "chai_sutta_jhalwa",
+    "shopName": "The Chai Sutta Bar",
+    "email": "chai@iiit.com",
+    "password": "hashedpassword130",
+    "phone": "9876543030",
+    "role": "vendor",
+    "category": "Food",
+    "isLive": true,
+    "location": { "type": "Point", "coordinates": [81.7704, 25.4308] },
+    "rating": 4.8,
+    "menu": [
+      { "name": "Ginger Chai", "price": 15, "description": "Kulhad tea", "isAvailable": true },
+      { "name": "Maskabun", "price": 30, "description": "Butter and cream", "isAvailable": true },
+      { "name": "Rose Chai", "price": 20, "description": "Floral taste", "isAvailable": true },
+      { "name": "Iced Tea", "price": 40, "description": "Lemon and peach", "isAvailable": true }
     ]
   }
 ];

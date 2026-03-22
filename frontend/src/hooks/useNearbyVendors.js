@@ -2,12 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { io } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_API_URL;
-
-const socket = io(SOCKET_URL, {
-  withCredentials: true,
-  transports:["websocket", "polling"]
-});
+const socket = io("http://localhost:8080");
 
 export const useNearbyVendors = (lat, lng) => {
   const [vendors, setVendors] = useState([]);
@@ -39,17 +34,41 @@ export const useNearbyVendors = (lat, lng) => {
 
     fetchVendors();
 
-    socket.on("vendorStatusChanged", (data) => {
+    const handleStatusChange = (data) => {
+      console.log("Real-time update recieved:", data);
 
       setVendors((prevVendors) => 
         prevVendors.map((v) => 
           v._id === data.vendorId ? {...v, isLive: data.isLive} : v
         )
       );
-    });
+    }
+
+    const handleLocationChange = (data) => {
+      console.log("Vendor moved:", data);
+
+      setVendors((prevVendors) => 
+        prevVendors.map((v) => {
+          if(v._id === data.vendorId) {
+            return {
+              ...v,
+              location: {
+                ...v.location,
+                coordinates: [data.lng, data.lat]
+              }
+            };
+          }
+          return v;
+        })
+      );
+    };
+
+    socket.on("vendorStatusChanged", handleStatusChange);
+    socket.on("vendorLocationChanged", handleLocationChange);
 
     return () => {
-      socket.off("vendorStatusChanged");
+      socket.off("vendorStatusChanged", handleStatusChange);
+      socket.off("vendorLocationChanged", handleLocationChange);
     }
   }, [lat, lng]);
 

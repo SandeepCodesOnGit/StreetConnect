@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/axios'; // 🚨 Using your custom Axios instance!
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBoxOpen, faClock, faCheckCircle, faSpinner, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { io } from 'socket.io-client';
+const socket = io("http://localhost:8080");
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -24,6 +26,24 @@ const Orders = () => {
     };
 
     fetchMyOrders();
+  }, []);
+
+  useEffect(() => {
+    const handleStatusChange = (data) => {
+      // Find the specific order in our array and update its status
+      setOrders((prevOrders) => 
+        prevOrders.map((order) => 
+          order._id === data.orderId 
+            ? { ...order, status: data.status } 
+            : order
+        )
+      );
+    };
+
+    socket.on("orderStatusChanged", handleStatusChange);
+
+    // Clean up the listener when they leave the page
+    return () => socket.off("orderStatusChanged", handleStatusChange);
   }, []);
 
   // Helper function to color-code the order status

@@ -15,9 +15,19 @@ const createOrder = async (req, res) => {
     user: customerId,
     items: items,
     totalAmount: totalAmount,
+    status: "Pending"
   });
   await newOrder.save();
 
+  const populatedOrder = await Order.findById(newOrder._id).populate("user", "username email");
+
+  const io = req.app.get("io");
+  if(io) {
+    io.emit("newOrderPlaced", {
+      vendorId: vendorId.toString(),
+      order: populatedOrder
+    });
+  }
   res.status(201).json({
     success: true,
     message: "Order placed successfully",
@@ -54,11 +64,9 @@ const getOrderById = async (req, res) => {
 
 const getVendorOrders = async (req, res) => {
   const { vendorId } = req.params;
-  console.log(vendorId);
   const orders = await Order.find({ vendor: vendorId })
     .populate("user", "username email")
     .sort({ createdAt: -1 });
-console.log(orders)
   res.status(200).json({
     success: true,
     orders: orders,
@@ -81,17 +89,36 @@ const updateOrderStatus = async (req, res) => {
     return res.status(400).json({ success: false, message: "Invalid status" });
   }
 
-  const order = await Order.findByIdAndUpdate(id, { status }, { new: true }).populate("user", "username");
+  const order = await Order.findByIdAndUpdate(
+    id,
+    { status },
+    { new: true },
+  ).populate("user", "username");
 
-  if(!order) {
-    return res.status(404).json({ success: false, message: "Order not found"});
+  if (!order) {
+    return res.status(404).json({ success: false, message: "Order not found" });
+  }
+
+  const io = req.app.get("io");
+  if(io) {
+    io.emit("orderStatusChanged", {
+      orderId: order._id.toString(),
+      userId: order.user._id.toString(),
+      status: status
+    });
   }
 
   res.status(200).json({
     success: true,
     message: `Order status updated to ${status}`,
-    order: order
+    order: order,
   });
 };
 
-export { createOrder, getMyOrders, getOrderById, getVendorOrders, updateOrderStatus };
+export {
+  createOrder,
+  getMyOrders,
+  getOrderById,
+  getVendorOrders,
+  updateOrderStatus,
+};

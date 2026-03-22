@@ -2,12 +2,7 @@ import { useEffect, useState } from "react"
 import api from "../api/axios";
 import { io } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_API_URL;
-
-const socket = io(SOCKET_URL, {
-  withCredentials: true,
-  transports:["websocket", "polling"]
-});
+const socket = io("http://localhost:8080");
 
 export const useVendor = (id) => {
     const [vendor, setVendor] = useState(null);
