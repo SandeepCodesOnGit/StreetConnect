@@ -15,7 +15,7 @@ const app = express();
 const server = createServer(app);
 const io = connectToSocket(server);
 
-// app.set('trust proxy', 1);
+app.set('trust proxy', 1);
 app.set("io", io);
 
 main().then((res) => {
