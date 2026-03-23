@@ -4,9 +4,9 @@ import { createOrder, getMyOrders, getOrderById, getVendorOrders, updateOrderSta
 import wrapASync from "../utils/wrapAsync.js";
 import { authorize, protect } from "../midddleware/authMiddleware.js";
 
-router.post("/", protect, authorize("user"), wrapASync(createOrder));
+router.post("/", protect, authorize("user", "vendor"), wrapASync(createOrder));
 
-router.get("/myorders", protect, authorize("user"), wrapASync(getMyOrders));
+router.get("/myorders", protect, authorize("user", "vendor"), wrapASync(getMyOrders));
 
 router.get("/vendor/:vendorId", protect, authorize("vendor"), wrapASync(getVendorOrders));
 
