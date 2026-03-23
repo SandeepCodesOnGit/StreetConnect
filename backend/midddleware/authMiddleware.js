@@ -4,6 +4,7 @@ import Vendor from "../models/Vendor.js";
 
 const protect = async (req, res, next) => {
     console.log("Cookies received:", req.cookies);
+    console.log("Cookies received:", req);
     const token = req.cookies.token;
 
     if(!token) {
