@@ -27,15 +27,17 @@ main().then((res) => {
 async function main() {
     await mongoose.connect(process.env.MONGO_URI);
 }
-
-app.use(cors({
-    origin: process.env.FRONTEND_URL?.replace(/\/$/, ""),// ? process.env.FRONTEND_URL.replace(/\/$/, "") : true,
+const frontendUrl = process.env.FRONTEND_URL?.replace(/\/$/, "");
+const corsOptions = {
+    origin: frontendUrl,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
-}));
+}
 
-// app.options(/(.*)/, cors());
+app.use(cors(corsOptions));
+
+app.options(/(.*)/, cors(corsOptions));
 
 app.use(cookieParser());
 app.use(express.json({}));
