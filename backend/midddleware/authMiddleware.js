@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import Vendor from "../models/Vendor.js";
 
 const protect = async (req, res, next) => {
+    console.log("Cookies received:", req.cookies);
     const token = req.cookies.token;
 
     if(!token) {

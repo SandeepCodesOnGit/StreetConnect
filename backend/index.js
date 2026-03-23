@@ -29,13 +29,13 @@ async function main() {
 }
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : true,
+    origin: process.env.FRONTEND_URL?.replace(/\/$/, ""),// ? process.env.FRONTEND_URL.replace(/\/$/, "") : true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-app.options(/(.*)/, cors());
+// app.options(/(.*)/, cors());
 
 app.use(cookieParser());
 app.use(express.json({}));
@@ -45,9 +45,9 @@ app.get("/", (req, res) => {
     res.send("Kya be laude");
 })
 app.use("/api/auth", authRoutes);
+app.use("/api/orders", orderRoutes);
 app.use("/api/vendors", vendorRoutes);
-app.use("/api/orders", orderRoutes)
 
-server.listen(process.env.PORT, "0.0.0.0", () => {
+server.listen(process.env.PORT, () => {
     console.log(`listening...`);
 })
