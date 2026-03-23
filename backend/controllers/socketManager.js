@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 const connectToSocket = (server) => {
     const io = new Server(server, {
         cors: {
-            origin: process.env.FRONTEND_URL,
+            origin: process.env.FRONTEND_URL.replace(/\/$/, ""),
             methods: ["GET", "POST", "PUT", "DELETE"],
             allowedHeaders: ["*"],
             credentials: true
