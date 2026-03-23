@@ -3,25 +3,20 @@ import { useParams, useNavigate, NavLink, Routes, Route, Navigate } from 'react-
 import api from '../../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStore } from '@fortawesome/free-solid-svg-icons';
-import { io } from 'socket.io-client';
-
+import { useSocketContext } from '../../socket/SocketContext';
 
 import MenuList from '../../components/vendor/MenuList';
 import AddMenu from '../../components/vendor/AddMenu';
 import LiveOrders from '../../components/vendor/LiveOrders';
 
-// IMPORT YOUR COMPONENTS
-
-
-const socket = io("http://localhost:8080");
-
 const VendorDashboard = () => {
   const { vendorId } = useParams();
-  
-  // 🚨 activeTab state is completely gone! React Router handles it now.
   const [isLive, setIsLive] = useState(false); 
   const lastDbSyncTime = useRef(0); 
+  const [vendor, setVendor] = useState({ shopName: "Loading..." });
 
+    const { socket } = useSocketContext();
+    
   useEffect(() => {
     fetchVendorStatus();
   }, [vendorId]);
@@ -29,7 +24,7 @@ const VendorDashboard = () => {
   // GPS Radar with Database Sync
   useEffect(() => {
     let watchId;
-    if(isLive) {
+    if(isLive && socket) {
       if("geolocation" in navigator) {
         watchId = navigator.geolocation.watchPosition((position) => {
           const { latitude, longitude } = position.coords;
@@ -53,12 +48,13 @@ const VendorDashboard = () => {
     return () => {
       if(watchId) navigator.geolocation.clearWatch(watchId);
     }
-  }, [isLive, vendorId]);
+  }, [isLive, vendorId, socket]);
 
   const fetchVendorStatus = async () => {
     try {
       const res = await api.get(`/vendors/${vendorId}`);
       if (res.data.success && res.data.vendor) {
+        setVendor(res.data.vendor);
         setIsLive(res.data.vendor.isLive);
       }
     } catch (err) {
@@ -67,17 +63,26 @@ const VendorDashboard = () => {
   };
 
   const handleToggleLive = async () => {
+    const newStatus = !isLive;
+    setIsLive(newStatus); 
+    
     try {
-      setIsLive(prev => !prev); 
-      const res = await api.put(`/vendors/${vendorId}/status`);
-      if (!res.data.success) setIsLive(prev => !prev);
+      const res = await api.put(`/vendors/${vendorId}/status`, { isLive: newStatus });
+      
+      if (!res.data.success) {
+        setIsLive(!newStatus);
+      } else {
+        if (socket) {
+          socket.emit("vendorStatusChanged", { vendorId: vendorId, isLive: newStatus });
+        }
+      }
     } catch (error) {
-      setIsLive(prev => !prev); 
+      setIsLive(!newStatus); 
       alert("Failed to update status.");
     }
   };
 
-  // Helper function to style active links cleanly
+
   const navLinkClass = ({ isActive }) => 
     `font-bold pb-3 px-2 transition border-b-2 ${isActive ? 'text-orange-500 border-orange-500' : 'text-gray-400 border-transparent hover:text-gray-600'}`;
 
@@ -89,7 +94,7 @@ const VendorDashboard = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <h1 className="text-3xl font-black text-gray-900 flex items-center gap-3">
-              <FontAwesomeIcon icon={faStore} className="text-orange-500" /> Vendor Dashboard
+              <FontAwesomeIcon icon={faStore} className="text-orange-500" /> {vendor.shopName}
             </h1>
             
             <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-xl border border-gray-100">

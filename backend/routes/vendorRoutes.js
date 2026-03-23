@@ -1,11 +1,12 @@
 import express from 'express';
 const router = express.Router();
 import wrapAsync from "../utils/wrapAsync.js";
-import { addMenuItem, deleteMenuItem, getNearbyVendors, getVendor, toggleVendorStatus, updateMenuItem, updateVendorLocation } from '../controllers/vendorController.js';
+import { addMenuItem, deleteMenuItem, getNearbyVendors, getVendor, toggleVendorStatus, updateMenuItem, updateVendorLocation, getVendorCategories } from '../controllers/vendorController.js';
 import { authorize, protect } from '../midddleware/authMiddleware.js';
 
 
 router.get("/nearby", wrapAsync(getNearbyVendors));
+router.get("/categories", wrapAsync(getVendorCategories));
 // router.put("/toggle-status", protect, wrapAsync(toggleVendorStatus));
 
 router.post("/:id/menu", protect, authorize("vendor"), wrapAsync(addMenuItem));

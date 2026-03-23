@@ -50,7 +50,7 @@ const VendorSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Food', 'Vegetables', 'Fruits', 'Repair', 'Other'],
+    enum: ['Food', 'Vegetables', 'Fruits', 'Repair', 'Other', 'Clothing', 'Electronics', 'Books', 'Furniture', 'Toys', 'Health & Beauty'],
     required: true
   },
   isLive: {

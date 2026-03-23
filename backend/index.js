@@ -33,29 +33,18 @@ app.use(cors({
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 }));
+
 app.use(cookieParser());
 app.use(express.json({}));
 app.use(express.urlencoded({extended: true}));
 
+app.get("/", (req, res) => {
+    res.send("Kya be laude");
+})
 app.use("/api/auth", authRoutes);
 app.use("/api/vendors", vendorRoutes);
 app.use("/api/orders", orderRoutes)
 
-// app.all("*", (req, res, next) => {
-//     next(new ExpressError(404, 'API Route Not Found'));
-// });
-
-// app.use((err, req, res, next) => {
-//     const { statusCode = 500 } = err;
-//     if(!err.message) err.message = "Oh NO, Something went wrong on the server!";
-
-//     console.error("🔥 Error caught by Global Handler:", err);
-//     res.status(statusCode).json({
-//         success: false,
-//         message: err.message,
-//         stack: process.env.NODE_ENV === 'production' ? null : err.stack
-//     });
-// })
-server.listen(8080, () => {
+server.listen(process.env.PORT, "0.0.0.0", () => {
     console.log(`listening...`);
 })

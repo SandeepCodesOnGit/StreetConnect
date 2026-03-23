@@ -16,7 +16,7 @@ import {
 import { useCart } from "../context/CartContext";
 import api from "../api/axios";
 import { useVendor } from "../hooks/useVendor";
-import { io } from "socket.io-client";
+import { useSocketContext } from "../socket/SocketContext";
 
 const VendorShop = () => {
   const { id } = useParams();
@@ -28,30 +28,35 @@ const VendorShop = () => {
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const { cart, addToCart, removeFromCart, getItemQty, clearCart, totalItems, totalPrice } = useCart();
-  
+  const { socket } = useSocketContext();
+
   useEffect(() => {
     if (vendor) setLiveVendor(vendor);
   }, [vendor]);
 
   useEffect(() => {
-    const socket = io("http://localhost:8080");
+    if (!socket || !id) return;
+    socket.emit("joinVendorRoom", id); // Join a room specific to this vendor for targeted updates
 
     const handleMenuUpdate = (data) => {
-      if (data.vendorId === id) {
-        setLiveVendor((prev) => {
-          if (!prev) return prev;
-          return { ...prev, menu: data.menu };
-        });
-      }
+      setLiveVendor((prev) => (
+        prev ? {...prev, menu: data.menu } : prev));
+    };
+
+    const handleStatusUpdate = (data) => {
+      setLiveVendor((prev) => (
+        prev ? {...prev, isLive: data.isLive } : prev));
     };
 
     socket.on("menuUpdated", handleMenuUpdate);
+    socket.on("vendorStatusChanged", handleStatusUpdate);
 
     return () => {
+      socket.emit("leaveVendorRoom", id); 
       socket.off("menuUpdated", handleMenuUpdate);
-      socket.disconnect();
+      socket.off("vendorStatusChanged", handleStatusUpdate);
     };
-  }, [id]);
+  }, [socket, id]);
 
   useEffect(() => {
     if(totalItems === 0) setIsCartOpen(false);
@@ -75,9 +80,9 @@ const VendorShop = () => {
       const res = await api.post("/orders", orderData);
 
       if (res.data.success) {
-        alert("🎉 Order Placed Successfully!");
         clearCart(); 
         setIsCartOpen(false); 
+        navigate(`/orders/${res.data.order._id}`);
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {

@@ -3,14 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/axios'; // 🚨 Using your custom Axios instance!
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBoxOpen, faClock, faCheckCircle, faSpinner, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { io } from 'socket.io-client';
-const socket = io("http://localhost:8080");
+
+import { useSocketContext } from '../socket/SocketContext';
+
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { socket } = useSocketContext();
 
   useEffect(() => {
     const fetchMyOrders = async () => {
@@ -29,6 +31,8 @@ const Orders = () => {
   }, []);
 
   useEffect(() => {
+    if(!socket) return;
+
     const handleStatusChange = (data) => {
       // Find the specific order in our array and update its status
       setOrders((prevOrders) => 
@@ -44,7 +48,7 @@ const Orders = () => {
 
     // Clean up the listener when they leave the page
     return () => socket.off("orderStatusChanged", handleStatusChange);
-  }, []);
+  }, [socket]);
 
   // Helper function to color-code the order status
   const getStatusColor = (status) => {

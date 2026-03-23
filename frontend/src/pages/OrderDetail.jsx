@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faSpinner, faReceipt, faStore, faClock, faThumbsUp, faFire, faShoppingBag, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import { io } from 'socket.io-client';
-const socket = io("http://localhost:8080");
+import { faArrowLeft, faSpinner, faReceipt, faStore, faClock, faThumbsUp, faFire, faShoppingBag, faCheckCircle, faLocationCrosshairs } from '@fortawesome/free-solid-svg-icons';
+import { useSocketContext } from '../socket/SocketContext';
 
 const OrderDetail = () => {
   const { id } = useParams();
@@ -12,6 +11,7 @@ const OrderDetail = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { socket } = useSocketContext();
 
   console.log(order);
   useEffect(() => {
@@ -29,10 +29,9 @@ const OrderDetail = () => {
   }, [id]);
 
   useEffect(() => {
-    if(!order) return;
+    if(!socket ||!order?._id) return;
 
     const handleStatusChange = (data) => {
-      console.log(data);
       if (data.orderId === order._id) {
         setOrder((prevOrder) => ({
           ...prevOrder,
@@ -43,7 +42,7 @@ const OrderDetail = () => {
     socket.on("orderStatusChanged", handleStatusChange);
 
     return () => socket.off("orderStatusChanged", handleStatusChange);
-  }, [order?._id]);
+  }, [order?._id, socket]);
 
   const orderSteps = [
     { status: 'Pending', icon: faClock },
@@ -130,6 +129,16 @@ const OrderDetail = () => {
               {order.status}
             </span>
           </div>
+          
+          {['Accepted', 'Preparing', 'Ready'].includes(order.status) && order.vendor && (
+            <button 
+              onClick={() => navigate(`/track/${order.vendor._id}`)} // Make sure this matches your App.js route for the map!
+              className="w-full mb-8 bg-gray-900 text-white font-black py-4 rounded-2xl shadow-lg hover:bg-black transition-transform active:scale-95 text-lg flex justify-center items-center gap-3 uppercase tracking-widest"
+            >
+              <FontAwesomeIcon icon={faLocationCrosshairs} className="animate-pulse text-orange-500" />
+              Track Vendor Live
+            </button>
+          )}
 
           {/* Vendor Info */}
           <div className="mb-8">

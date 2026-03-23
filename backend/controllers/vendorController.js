@@ -31,6 +31,11 @@ const getNearbyVendors = async (req, res) => {
   });
 };
 
+const getVendorCategories = (req, res) => {
+  const categories = Vendor.schema.path('category').enumValues;
+  res.status(200).json({ success: true, categories: categories });
+};
+
 const getVendor = async (req, res) => {
   const { id } = req.params;
 
@@ -66,7 +71,7 @@ const toggleVendorStatus = async (req, res) => {
   const io = req.app.get("io");
 
   if (io) {
-    io.emit("vendorStatusChanged", {
+    io.to(vendor._id.toString()).emit("vendorStatusChanged", {
       vendorId: vendor._id.toString(),
       isLive: vendor.isLive,
     });
@@ -119,7 +124,7 @@ const updateVendorLocation = async (req, res) => {
 
 const addMenuItem = async (req, res) => {
   const { id } = req.params;
-  const { name, description, price, image } = req.body;
+  const { name, description, price, imageUrl } = req.body;
 
   if (req.user._id.toString() !== id) {
     return res.status(403).json({ success: false, message: "Forbidden: You can only add items to your own menu." });
@@ -146,7 +151,7 @@ const addMenuItem = async (req, res) => {
     description: description,
     price: Number(price),
     isAvailable: true,
-    imageUrl: image,
+    imageUrl: imageUrl,
   };
   
   vendor.menu.push(newItem);
@@ -154,7 +159,7 @@ const addMenuItem = async (req, res) => {
 
   const io = req.app.get("io");
   if (io) {
-    io.emit("menuUpdated", {
+    io.to(vendor._id.toString()).emit("menuUpdated", {
       vendorId: vendor._id.toString(), 
       menu: vendor.menu
     });
@@ -195,7 +200,7 @@ const updateMenuItem = async (req, res) => {
 
   const io = req.app.get("io");
   if(io) {
-    io.emit("menuUpdated", {
+    io.to(vendor._id.toString()).emit("menuUpdated", {
       vendorId: vendor._id.toString(),
       menu: vendor.menu
     });
@@ -224,7 +229,7 @@ const deleteMenuItem = async (req, res) => {
 
   const io = req.app.get("io");
   if (io) {
-    io.emit("menuUpdated", {
+    io.to(vendor._id.toString()).emit("menuUpdated", {
       vendorId: id.toString(),
       menu: vendor.menu
     });
@@ -237,4 +242,4 @@ const deleteMenuItem = async (req, res) => {
   });
 }
 
-export { getNearbyVendors, toggleVendorStatus, getVendor, addMenuItem, updateVendorLocation, updateMenuItem, deleteMenuItem };
+export { getNearbyVendors, toggleVendorStatus, getVendor, addMenuItem, updateVendorLocation, updateMenuItem, deleteMenuItem, getVendorCategories };

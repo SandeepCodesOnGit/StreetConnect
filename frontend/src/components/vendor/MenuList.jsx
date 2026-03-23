@@ -99,7 +99,7 @@ const MenuList = ({ vendorId }) => {
             <div key={item._id} className={`flex flex-col overflow-hidden rounded-3xl transition duration-300 group ${item.isAvailable !== false ? 'bg-white shadow-sm hover:shadow-xl' : 'bg-gray-100 border border-gray-200'}`}>
               
               {/* 🚨 1. Image Bigger - Full Width Top Placement */}
-              <div className="w-full h-56 relative overflow-hidden flex-shrink-0">
+              <div className="w-full h-56 relative overflow-hidden shrink-0">
                 {item.imageUrl ? (
                   <img 
                     src={item.imageUrl} 
@@ -130,7 +130,7 @@ const MenuList = ({ vendorId }) => {
                       {item.name}
                     </h4>
                     {/* Refined Price Badge */}
-                    <div className="text-right flex-shrink-0">
+                    <div className="text-right shrink-0">
                       <span className="text-2xl font-black text-orange-500">₹{item.price}</span>
                     </div>
                   </div>

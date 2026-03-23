@@ -9,7 +9,7 @@ import {
   useMap,
 } from "react-leaflet";
 import api from "../api/axios";
-import { io } from "socket.io-client";
+
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -22,7 +22,7 @@ import {
   faRoute
 } from "@fortawesome/free-solid-svg-icons";
 
-const socket = io("http://localhost:8080");
+import { useSocketContext } from "../socket/SocketContext";
 
 // --- ICONS ---
 const vendorIcon = new L.Icon({
@@ -75,6 +75,8 @@ const TrackVendor = () => {
   const [loading, setLoading] = useState(true);
   const [userLocation, setUserLocation] = useState(null);
   const [locationError, setLocationError] = useState(null);
+
+  const { socket } = useSocketContext();
 
   // 1. Watch the User's Location Continuously
   useEffect(() => {
@@ -129,6 +131,10 @@ const TrackVendor = () => {
 
   // 3. Listen for Real-Time Vendor Movement via Socket
   useEffect(() => {
+    if (!socket || !vendorId) return;
+
+    socket.emit("joinVendorRoom", vendorId); // Join a room specific to this vendor for targeted updates
+
     const handleLocationChange = (data) => {
       if (data.vendorId === vendorId) {
         setVendor((prev) => ({
@@ -139,8 +145,11 @@ const TrackVendor = () => {
     };
 
     socket.on("vendorLocationChanged", handleLocationChange);
-    return () => socket.off("vendorLocationChanged", handleLocationChange);
-  }, [vendorId]);
+    return () => {
+      socket.emit("leaveVendorRoom", vendorId); // Optional: Leave the room when component unmounts
+      socket.off("vendorLocationChanged", handleLocationChange);
+    };
+  }, [vendorId, socket]);
 
   // 4. Draw Route Line & GET ETA 
   useEffect(() => {

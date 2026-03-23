@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
 import api from "../api/axios";
-import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8080");
+import { useSocketContext } from "../socket/SocketContext";
 
 export const useVendor = (id) => {
     const [vendor, setVendor] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const { socket } = useSocketContext();
+
     useEffect(() => {
         if(!id) {
             setLoading(false)
@@ -29,6 +31,12 @@ export const useVendor = (id) => {
         };
 
         fetchVendorData();
+    }, [id]);
+
+    useEffect(() => {
+        if(!socket) return;
+
+        socket.emit("joinVendorRoom", id);
 
         const handleStatusChange = (data) => {
             if(data.vendorId === id) {
@@ -42,10 +50,11 @@ export const useVendor = (id) => {
         socket.on("vendorStatusChanged", handleStatusChange);
 
         return () => {
+            socket.emit("leaveVendorRoom", id);
             socket.off("vendorStatusChanged", handleStatusChange);
         };
 
-    }, [id]);
+    }, [socket, id]);
 
     return { vendor, loading, error};
 };

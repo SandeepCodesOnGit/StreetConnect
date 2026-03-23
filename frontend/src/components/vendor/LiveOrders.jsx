@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import api from "../../api/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // 🚨 Added faSync and faClock for the new balanced header
@@ -8,19 +8,25 @@ import {
   faSync,
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
-import { io } from "socket.io-client";
-const socket = io("http://localhost:8080");
+
+import { useSocketContext } from "../../socket/SocketContext";
 
 const LiveOrders = ({ vendorId }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { socket } = useSocketContext();
+  const audioRef = useRef(new Audio("../assets/fahhh.wav"))
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
       const res = await api.get(`/orders/vendor/${vendorId}`);
-      setOrders(res.data.orders);
+      console.log(res)
+      const activeOrders = res.data.orders.filter(
+        (order) => !["Completed", "Cancelled"].includes(order.status)
+      );
+      setOrders(activeOrders);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load orders");
     } finally {
@@ -33,24 +39,32 @@ const LiveOrders = ({ vendorId }) => {
   }, [vendorId]);
 
   useEffect(() => {
+    if(!socket) return;
+
     const handleNewOrder = (data) => {
       if (data.vendorId === vendorId) {
         setOrders((prevOrders) => [data.order, ...prevOrders]);
+        audioRef.current.play().catch(e => console.log("Audio blocked by browser:", e)); 
       }
     };
     socket.on("newOrderPlaced", handleNewOrder);
 
     return () => socket.off("newOrderPlaced", handleNewOrder);
-  }, [vendorId]);
+  }, [vendorId, socket]);
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
-      await api.put(`/orders/${orderId}/status`, { status: newStatus });
-      setOrders(
-        orders.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order,
-        ),
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? { ...order, status: newStatus } : order
+        )
       );
+      await api.put(`/orders/${orderId}/status`, { status: newStatus });
+      if (newStatus === "Completed" || newStatus === "Cancelled") {
+        setTimeout(() => {
+          setOrders((prevOrders) => prevOrders.filter((o) => o._id !== orderId));
+        }, 1500);
+      }
     } catch (error) {
       alert("Failed to update order status.");
     }

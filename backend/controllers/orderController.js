@@ -23,7 +23,7 @@ const createOrder = async (req, res) => {
 
   const io = req.app.get("io");
   if(io) {
-    io.emit("newOrderPlaced", {
+    io.to(vendorId.toString()).emit("newOrderPlaced", {
       vendorId: vendorId.toString(),
       order: populatedOrder
     });
@@ -101,7 +101,7 @@ const updateOrderStatus = async (req, res) => {
 
   const io = req.app.get("io");
   if(io) {
-    io.emit("orderStatusChanged", {
+    io.to(order.user._id.toString()).emit("orderStatusChanged", {
       orderId: order._id.toString(),
       userId: order.user._id.toString(),
       status: status

@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8080");
+import { useSocketContext } from '../socket/SocketContext';
 
 export const useNearbyVendors = (lat, lng) => {
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { socket } = useSocketContext();
+
   useEffect(() => {
     if (!lat || !lng) {
       setLoading(false);
       return;
     }
+
+    let fetchedVendorIds = [];
 
     const fetchVendors = async () => {
       setLoading(true);
@@ -23,6 +26,13 @@ export const useNearbyVendors = (lat, lng) => {
         const fetchedVendors = res.data.vendors || res.data.data || res.data.count || [];
         setVendors(fetchedVendors);
         setError(null);
+
+        if(socket) {
+          fetchedVendors.forEach((vendor) => {
+            socket.emit("joinVendorRoom", vendor._id);
+            fetchedVendorIds.push(vendor._id);
+          });
+        }
       } catch (err) {
         console.error("Failed to fetch nearby vendors:", err);
         setError(err.response?.data?.message || "Could not load vendors in your area.");
@@ -33,6 +43,18 @@ export const useNearbyVendors = (lat, lng) => {
     };
 
     fetchVendors();
+
+    return () => {
+      if(socket) {
+        fetchedVendorIds.forEach((vendorId) => 
+          socket.emit("leaveVendorRoom", vendorId)
+        );
+      }
+    };
+  }, [lat, lng, socket]);
+
+  useEffect(() => {
+    if(!socket) return;
 
     const handleStatusChange = (data) => {
       console.log("Real-time update recieved:", data);
@@ -70,7 +92,7 @@ export const useNearbyVendors = (lat, lng) => {
       socket.off("vendorStatusChanged", handleStatusChange);
       socket.off("vendorLocationChanged", handleLocationChange);
     }
-  }, [lat, lng]);
+  }, [socket]);
 
   return { vendors, loading, error };
 };
