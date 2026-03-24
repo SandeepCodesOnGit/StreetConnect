@@ -19,7 +19,7 @@ const getNearbyVendors = async (req, res) => {
           type: "Point",
           coordinates: [longitude, latitude],
         },
-        $maxDistance: 2000,
+        $maxDistance: 10000,
       },
     },
   }).select("-password");
