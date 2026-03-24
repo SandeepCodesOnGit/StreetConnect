@@ -14,7 +14,8 @@ const sendCookie = (user, role, statusCode, res) => {
         httpOnly: true,
         secure: true,
         sameSite: 'none',
-        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        partitioned: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     };
 
     res.status(statusCode).cookie("token", token, cookieOptions).json({
