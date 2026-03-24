@@ -9,12 +9,12 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://localhost:8080", // Your Backend
+        target: "https://street-connect-y4un.vercel.app/", // Your Backend
         changeOrigin: true,
         secure: false,
       },
       "/socket.io": {
-        target: "http://localhost:8080",
+        target: "https://street-connect-y4un.vercel.app/",
         ws: true,
         changeOrigin: true,
         secure: false,
