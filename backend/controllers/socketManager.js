@@ -10,7 +10,7 @@ const connectToSocket = (server) => {
             allowedHeaders: ["*"],
             credentials: true
         },
-        transports: ['websocket', 'polling']
+        transports: ['websocket']
     });
     io.use((socket, next) => {
         try {
