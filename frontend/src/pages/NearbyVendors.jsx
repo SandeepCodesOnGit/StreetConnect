@@ -212,7 +212,7 @@ const NearbyVendors = () => {
                       }}
                       className="flex-1 bg-orange-100 hover:bg-orange-500 hover:text-white text-orange-600 py-2 rounded-xl text-xs font-bold transition"
                     >
-                      View Menu
+                      View Products
                     </button>
                   </div>
                 </div>

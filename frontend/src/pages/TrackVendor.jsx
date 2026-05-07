@@ -288,7 +288,7 @@ const TrackVendor = () => {
             onClick={() => navigate(`/vendor/${vendor._id}`)}
             className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl font-bold text-sm hover:bg-orange-500 hover:text-white transition"
           >
-            Menu
+            View Products
           </button>
         </div>
 
