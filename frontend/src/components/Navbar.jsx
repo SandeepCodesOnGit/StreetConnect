@@ -24,8 +24,12 @@ const Navbar = () => {
       {/* 🚨 NAV LINKS - Updated to match the uppercase tracked style */}
       <ul className="hidden md:flex gap-8 items-center">
         <Link to="/"><li className="text-[0.78rem] font-bold tracking-[0.12em] uppercase text-[#B87645] hover:text-orange-500 transition-colors cursor-pointer">Discover</li></Link>
-        <li className="text-[0.78rem] font-bold tracking-[0.12em] uppercase text-[#B87645] hover:text-orange-500 transition-colors cursor-pointer">For Vendors</li>
-        <li className="text-[0.78rem] font-bold tracking-[0.12em] uppercase text-[#B87645] hover:text-orange-500 transition-colors cursor-pointer">How It Works</li>
+        <Link to="/for-vendors">
+          <li className="text-[0.78rem] font-bold tracking-[0.12em] uppercase text-[#B87645] hover:text-orange-500 transition-colors cursor-pointer">For Vendors</li>
+        </Link>
+        <Link to="/how-it-works">
+          <li className="text-[0.78rem] font-bold tracking-[0.12em] uppercase text-[#B87645] hover:text-orange-500 transition-colors cursor-pointer">How It Works</li>
+        </Link>
       </ul>
 
       <div className="flex gap-4 items-center">

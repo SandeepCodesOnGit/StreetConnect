@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import HowItWorks from "./components/HowItWorks";
+import ForVendors from "./pages/ForVendors";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import NearbyVendors from "./pages/NearbyVendors";
@@ -11,6 +13,8 @@ import OrderDetail from "./pages/OrderDetail";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import TrackVendor from "./pages/TrackVendor";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./pages/NotFound";
+import About from "./pages/About";
 
 
 
@@ -20,6 +24,9 @@ const App = () => {
     <Navbar/>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/for-vendors" element={<ForVendors />} />
+        <Route path="/about" element={<About />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/nearby" element={ <NearbyVendors/>} />
@@ -62,6 +69,7 @@ const App = () => {
             </ProtectedRoute>
           } 
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

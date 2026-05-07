@@ -11,7 +11,7 @@ import {
   faStoreSlash,
   faStar,
   faSpinner,
-  faMapLocationDot
+  faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 
 // --- 1. DEFINE THE LIVE (GREEN) ICON (SMALLER) ---
@@ -65,16 +65,15 @@ const NearbyVendors = () => {
   const { user } = useAuth();
 
   // Grab coordinates from the URL, or fallback to Lucknow for testing
-    const lat = searchParams.get("lat") || 26.8467;
-    const lng = searchParams.get("lng") || 80.9462;
-  
+  const lat = searchParams.get("lat") || 26.8467;
+  const lng = searchParams.get("lng") || 80.9462;
 
   // const lat = 26;
   // const lng = 80;
 
   const [showOnlyLive, setShowOnlyLive] = useState(false);
   const { vendors, loading, error } = useNearbyVendors(lat, lng);
-  console.log(vendors)
+  console.log(vendors);
 
   const displayedVendors = (vendors || []).filter((v) => {
     if (showOnlyLive) return v.isLive;
@@ -147,12 +146,15 @@ const NearbyVendors = () => {
                 </p>
               </div>
             ) : (
-             displayedVendors.map((vendor) => (
+              displayedVendors.map((vendor) => (
                 <div
                   key={vendor._id}
                   className="group flex flex-col p-4 border border-gray-100 rounded-2xl hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 transition-all bg-white"
                 >
-                  <div className="flex gap-4 cursor-pointer" onClick={() => navigate(`/vendor/${vendor._id}`)}>
+                  <div
+                    className="flex gap-4 cursor-pointer"
+                    onClick={() => navigate(`/vendor/${vendor._id}`)}
+                  >
                     <div className="w-20 h-20 bg-gray-100 rounded-xl shrink-0 relative overflow-hidden">
                       <span
                         className={`absolute top-1 left-1 px-2 py-0.5 text-[9px] font-black rounded-md text-white z-10 ${vendor.isLive ? "bg-green-500 animate-pulse" : "bg-gray-400"}`}
@@ -160,13 +162,16 @@ const NearbyVendors = () => {
                         {vendor.isLive ? "LIVE" : "OFFLINE"}
                       </span>
                       <img
-                        src={vendor.profilePic || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
+                        src={
+                          vendor.profilePic ||
+                          "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                        }
                         alt={`${vendor.shopName} profile`}
                         className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500"
-
-                        onError= {(e) => {
+                        onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+                          e.target.src =
+                            "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
                         }}
                       />
                     </div>
@@ -189,8 +194,8 @@ const NearbyVendors = () => {
                   {/* 🚨 UPDATED: Buttons in Sidebar */}
                   <div className="mt-3 pt-3 border-t border-gray-50 flex gap-2">
                     {/* Only show Track Live if vendor is Live AND user is logged in AND user is not a vendor */}
-                    {vendor.isLive && user && user.role !== 'vendor' && (
-                      <button 
+                    {vendor.isLive && user && user.role !== "vendor" && (
+                      <button
                         onClick={(e) => {
                           e.stopPropagation();
                           navigate(`/track/${vendor._id}`);
@@ -200,7 +205,7 @@ const NearbyVendors = () => {
                         <FontAwesomeIcon icon={faMapLocationDot} /> Track Live
                       </button>
                     )}
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         navigate(`/vendor/${vendor._id}`);
@@ -210,7 +215,6 @@ const NearbyVendors = () => {
                       View Menu
                     </button>
                   </div>
-
                 </div>
               ))
             )}
@@ -225,7 +229,7 @@ const NearbyVendors = () => {
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="&copy; OpenStreetMap"
+              attribution="&copy; StreetSync"
             />
             <MapCameraUpdater center={userLocation} />
 
@@ -251,16 +255,16 @@ const NearbyVendors = () => {
                     </strong>
                     <div className="flex flex-col gap-2 mt-2">
                       {/* 🚨 UPDATED: Button inside Map Popup */}
-                      {vendor.isLive && user && user.role !== 'vendor' && (
-                        <button 
-                          onClick={() => navigate(`/track/${vendor._id}`)} 
+                      {vendor.isLive && user && user.role !== "vendor" && (
+                        <button
+                          onClick={() => navigate(`/track/${vendor._id}`)}
                           className="bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-bold w-full flex justify-center items-center gap-2"
                         >
                           <FontAwesomeIcon icon={faMapLocationDot} /> Track Live
                         </button>
                       )}
-                      <button 
-                        onClick={() => navigate(`/vendor/${vendor._id}`)} 
+                      <button
+                        onClick={() => navigate(`/vendor/${vendor._id}`)}
                         className="bg-orange-500 text-white px-4 py-2 rounded-lg text-xs font-bold w-full"
                       >
                         VIEW MENU
