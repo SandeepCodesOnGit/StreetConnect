@@ -143,7 +143,8 @@ const VendorShop = () => {
               {liveVendor.isLive ? "LIVE NOW" : "OFFLINE"}
             </span>
             <img
-              src={liveVendor.profilePic}
+              src={liveVendor.profilePic ||
+                          "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
               className="object-cover w-full h-full"
               alt="shop"
             />
