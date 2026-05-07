@@ -167,7 +167,7 @@ const VendorShop = () => {
         </div>
 
         <h2 className="text-3xl font-black text-gray-900 mb-8 px-2 tracking-tight flex items-center gap-3">
-          Our Menu <FontAwesomeIcon icon={faFire} className="text-orange-500" />
+          Our roducts
         </h2>
 
         {/* --- 🚨 UPGRADED DELICIOUS MENU GRID --- */}
