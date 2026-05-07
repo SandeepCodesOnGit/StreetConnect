@@ -1,19 +1,69 @@
-import express from 'express';
+import express from "express";
 const router = express.Router();
 import wrapAsync from "../utils/wrapAsync.js";
-import { addMenuItem, deleteMenuItem, getNearbyVendors, getVendor, toggleVendorStatus, updateMenuItem, updateVendorLocation, getVendorCategories } from '../controllers/vendorController.js';
-import { authorize, protect } from '../midddleware/authMiddleware.js';
-
+import {
+  addMenuItem,
+  deleteMenuItem,
+  getNearbyVendors,
+  getVendor,
+  toggleVendorStatus,
+  updateMenuItem,
+  updateVendorLocation,
+  getVendorCategories,
+  updateVendorProfile,
+} from "../controllers/vendorController.js";
+import { authorize, protect } from "../midddleware/authMiddleware.js";
 
 router.get("/nearby", wrapAsync(getNearbyVendors));
 router.get("/categories", wrapAsync(getVendorCategories));
 // router.put("/toggle-status", protect, wrapAsync(toggleVendorStatus));
 
+router.put(
+  "/:id/profile",
+  protect,
+  authorize("vendor"),
+  wrapAsync(updateVendorProfile),
+);
+
 router.post("/:id/menu", protect, authorize("vendor"), wrapAsync(addMenuItem));
-router.put("/:id/location", protect, authorize("vendor"), wrapAsync(updateVendorLocation));
-router.put("/:id/status", protect, authorize("vendor"), wrapAsync(toggleVendorStatus));
-router.put("/:id/menu/:itemId", protect, authorize("vendor"), wrapAsync(updateMenuItem));
-router.delete("/:id/menu/:itemId", protect, authorize("vendor"), wrapAsync(deleteMenuItem));
+
+router.put(
+  "/:id/location",
+  protect,
+  authorize("vendor"),
+  wrapAsync(updateVendorLocation),
+);
+router.put(
+  "/:id/status",
+  protect,
+  authorize("vendor"),
+  wrapAsync(toggleVendorStatus),
+);
+router.put(
+  "/:id/menu/:itemId",
+  protect,
+  authorize("vendor"),
+  wrapAsync(updateMenuItem),
+);
+router.delete(
+  "/:id/menu/:itemId",
+  protect,
+  authorize("vendor"),
+  wrapAsync(deleteMenuItem),
+);
 router.get("/:id", wrapAsync(getVendor));
+
+// router.post(
+//   "/ai-menu",
+//   protect,
+//   authorize("vendor"),
+//   wrapAsync(generateAiMenu),
+// );
+// router.post(
+//   "/heatmap",
+//   protect,
+//   authorize("vendor"),
+//   wrapAsync(getSmartHeatmap),
+// );
 
 export default router;

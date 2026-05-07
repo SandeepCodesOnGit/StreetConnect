@@ -32,7 +32,8 @@ const VendorSchema = new mongoose.Schema({
   email: { 
     type: String, 
     required: true, 
-    unique: true 
+    unique: true,
+    lowercase: true
   },
   password: { 
     type: String, 
@@ -41,7 +42,9 @@ const VendorSchema = new mongoose.Schema({
   },
   phone: { 
     type: String, 
-    required: true 
+    required: true,
+    trim: true,
+    match: [/^\d{10}$/, "Please provide a valid 10-digit phone number"]
   },
   role: { 
     type: String, 
@@ -50,8 +53,9 @@ const VendorSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Food', 'Vegetables', 'Fruits', 'Repair', 'Other', 'Clothing', 'Electronics', 'Books', 'Furniture', 'Toys', 'Health & Beauty'],
-    required: true
+    trim: true,
+    required: true,
+    lowercase: true
   },
   isLive: {
     type: Boolean,
@@ -73,6 +77,11 @@ const VendorSchema = new mongoose.Schema({
   rating: { 
     type: Number, 
     default: 0 
+  },
+  profilePic: {
+    type: String,
+    default: "",
+    trim: true
   },
   
   menu: [MenuItemSchema] 

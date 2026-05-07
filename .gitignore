@@ -6,6 +6,11 @@ frontend/.env
 
 frontend/dist/
 frontend/build/
+frontend/src/components/vendor/AutoMenuGenerator.jsx
+frontend/src/components/vendor/DemandHeatmap.jsx
+
+backend/controllers/paymentController.js
+backend/routes/paymentRoutes.js
 
 /DS_Store
 Thumbs.db

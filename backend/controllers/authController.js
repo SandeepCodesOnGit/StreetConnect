@@ -3,6 +3,8 @@ import Vendor from "../models/Vendor.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const generateToken = (id, role) => {
     return jwt.sign({id, role}, process.env.JWT_SECRET, {expiresIn: "30d",});
 };
@@ -12,11 +14,14 @@ const sendCookie = (user, role, statusCode, res) => {
 
     const cookieOptions = {
         httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        partitioned: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     };
+
+    if(isProduction) {
+        cookieOptions.partitioned = true;
+    }
 
     res.status(statusCode).cookie("token", token, cookieOptions).json({
         _id: user.id,

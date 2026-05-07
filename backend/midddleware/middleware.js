@@ -10,12 +10,16 @@ const validateRegister = (req, res, next) => {
         role: Joi.string().valid("user", "vendor").required(),
 
         shopName: Joi.string().when("role", { is: "vendor", then: Joi.required() }),
-        category: Joi.string().when("role", { is: "vendor", then: Joi.required() })
+        category: Joi.string().when("role", { is: "vendor", then: Joi.required() }),
+        location: Joi.object({
+            type: Joi.string().valid("Point").required(),
+            coordinates: Joi.array().items(Joi.number()).length(2).required()
+        }).optional()
     });
 
     const { error } = schema.validate(req.body);
     if(error) {
-        const msg = error.details.map(el => el.message).join(",");
+        const msg = error.details.map(el => el.message.replace(/"/g, '')).join(",");
         throw new ExpressError(400, msg);
     } else {
         next();

@@ -74,7 +74,7 @@ const NearbyVendors = () => {
 
   const [showOnlyLive, setShowOnlyLive] = useState(false);
   const { vendors, loading, error } = useNearbyVendors(lat, lng);
-
+  console.log(vendors)
 
   const displayedVendors = (vendors || []).filter((v) => {
     if (showOnlyLive) return v.isLive;
@@ -160,9 +160,14 @@ const NearbyVendors = () => {
                         {vendor.isLive ? "LIVE" : "OFFLINE"}
                       </span>
                       <img
-                        src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200"
-                        alt="shop"
+                        src={vendor.profilePic || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
+                        alt={`${vendor.shopName} profile`}
                         className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500"
+
+                        onError= {(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+                        }}
                       />
                     </div>
                     <div className="flex flex-col justify-center flex-1">

@@ -1,30 +1,37 @@
-import React, {useState} from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useState, useEffect } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+} from 'react-leaflet';
+
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// --- FONT AWESOME IMPORTS (Only what Home needs) ---
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faMapMarkerAlt, 
-  faBell, 
-  faBagShopping, 
-  faBolt, 
-  faStar, 
-  faSpinner
+import {
+  faMapMarkerAlt,
+  faBell,
+  faBagShopping,
+  faBolt,
+  faStar,
+  faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 
-// --- IMPORT YOUR NEW COMPONENTS ---
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-// --- FIXED: Import Images for Vite/React Leaflet ---
+import { useNavigate } from 'react-router-dom';
+import api from '../api/axios';
+
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import { useNavigate } from 'react-router-dom';
 
-// Fix Leaflet Default Icon
+// --- LEAFLET ICON FIX ---
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
@@ -32,158 +39,401 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
+// --- MAP UPDATER COMPONENT ---
+const MapUpdater = ({ center }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (center) {
+      map.setView(center, map.getZoom(), {
+        animate: true,
+      });
+    }
+  }, [center, map]);
+
+  return null;
+};
+
 const Home = () => {
-    const navigate = useNavigate();
-    const [isLocating, setIsLocating] = useState(false);
+  const navigate = useNavigate();
 
-    const handleFindNearMe = () => {
-        setIsLocating(true);
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setIsLocating(false);
+  // STATES
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [nearbyBusinesses, setNearbyBusinesses] = useState([]);
+  const [isLocating, setIsLocating] = useState(true);
 
-            navigate(`/nearby?lat=${latitude}&lng=${longitude}`);
+  // FETCH BUSINESSES
+  const fetchNearbyBusinesses = async (lat, lng) => {
+    try {
+      const res = await api.get(`/vendors/nearby?lat=${lat}&lng=${lng}`);
+      if (res.data.success) {
+        setNearbyBusinesses(res.data.vendors);
+      }
+    } catch (error) {
+      console.error('Failed to fetch nearby businesses', error);
+    }
+  };
+
+  // LOCATION HANDLER (ON MOUNT)
+  useEffect(() => {
+    const savedLocation = localStorage.getItem('userLocation');
+
+    // USE SAVED LOCATION IF AVAILABLE (Fast Load)
+    if (savedLocation) {
+      const parsedLocation = JSON.parse(savedLocation);
+      setCurrentLocation([parsedLocation.latitude, parsedLocation.longitude]);
+      fetchNearbyBusinesses(parsedLocation.latitude, parsedLocation.longitude);
+      setIsLocating(false);
+      return;
+    }
+
+    // FETCH NEW LOCATION IF NO CACHE
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          localStorage.setItem('userLocation', JSON.stringify({ latitude, longitude }));
+          setCurrentLocation([latitude, longitude]);
+          await fetchNearbyBusinesses(latitude, longitude);
+          setIsLocating(false);
         },
         (error) => {
-            console.error(error);
-            alert("Please allow location access to find vendors");
-            setIsLocating(false);
+          console.error(error);
+          setIsLocating(false);
         },
-        {enableHighAccuracy: true}
-    );
-    };
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    } else {
+      setIsLocating(false);
+    }
+  }, []);
+
+  // FIND NEAR ME (FORCES FRESH GPS PING)
+  const handleFindNearMe = () => {
+    setIsLocating(true);
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // Update cache with new fresh location
+          localStorage.setItem('userLocation', JSON.stringify({ latitude, longitude }));
+          navigate(`/nearby?lat=${latitude}&lng=${longitude}`);
+        },
+        (error) => {
+          console.error(error);
+          setIsLocating(false);
+          // Fallback to whatever we have if fresh ping fails
+          if (currentLocation) {
+            navigate(`/nearby?lat=${currentLocation[0]}&lng=${currentLocation[1]}`);
+          }
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+  };
 
   return (
-    <div className="font-sans text-gray-800">
+    <div className="font-sans text-gray-800 bg-[#fffaf5] overflow-hidden">
+      <Navbar />
 
-      {/* ================= 2. HERO SECTION ================= */}
-      <section className="relative min-h-screen bg-linear-to-br from-orange-500 via-orange-400 to-yellow-400 flex flex-col justify-center items-center text-center text-white px-4 pt-20">
+      {/* HERO SECTION */}
+      <section className="relative min-h-screen bg-gradient-to-br from-orange-500 via-orange-400 to-yellow-400 flex flex-col justify-center items-center text-center text-white px-4 pt-24 overflow-hidden">
         
-        <div className="bg-white/20 backdrop-blur-md px-4 py-1 rounded-full text-sm font-semibold mb-6 border border-white/30 flex items-center gap-2">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Live Tracking Active
+        {/* BACKGROUND BLUR */}
+        <div className="absolute top-10 left-10 w-72 h-72 bg-yellow-300/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-orange-300/20 rounded-full blur-3xl"></div>
+
+        {/* LIVE BADGE */}
+        <div className="bg-white/20 backdrop-blur-md px-5 py-2 rounded-full text-sm font-semibold mb-8 border border-white/30 flex items-center gap-2 shadow-lg z-10">
+          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+          Live Marketplace Active
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 drop-shadow-sm">
-          Find Your Favorite <br />
-          <span className="relative inline-block">
-            Street Vendors in Real-Time
-            <svg className="absolute w-full h-4 -bottom-2 left-0 text-yellow-300" viewBox="0 0 200 9" fill="none"><path d="M2.00025 6.99997C2.00025 6.99997 101.5 0.999996 198.5 2.49997" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/></svg>
-          </span>
+        {/* HEADING */}
+        <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 z-10">
+          Discover Local
+          <br />
+          <span className="text-yellow-200">Businesses Live</span>
         </h1>
 
-        <p className="text-lg md:text-xl max-w-2xl opacity-90 mb-10 leading-relaxed">
-          Discover nearby chaat walas, vegetable carts, and street food vendors. 
-          Pre-order your favorites and skip the queue.
+        {/* SUBTEXT */}
+        <p className="text-lg md:text-xl max-w-3xl opacity-90 mb-10 leading-relaxed z-10">
+          Explore nearby shops, marketplaces, vendors, services, electronics,
+          groceries, fashion stores, and more in real-time.
         </p>
 
-        <div className="flex flex-col md:flex-row gap-4 mb-16 w-full md:w-auto px-4">
-            <button 
-                onClick={handleFindNearMe}
-                disabled={isLocating}
-                className="flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-white rounded-full text-lg font-bold hover:bg-white hover:text-orange-500 transition"
-            >
-                {isLocating ? <FontAwesomeIcon icon={faSpinner} className='animate-spin'/> : <FontAwesomeIcon icon={faMapMarkerAlt} />}
-                {isLocating ? "Locating..." : "Find Vendors Near Me"}
-            </button>
-            <button className="px-8 py-4 bg-transparent text-white font-bold hover:underline">
-                I'm a Vendor
-            </button>
+        {/* CTA BUTTON */}
+        <div className="flex flex-col md:flex-row gap-4 mb-16 z-10">
+          <button
+            onClick={handleFindNearMe}
+            disabled={isLocating}
+            className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-orange-500 rounded-full text-lg font-bold hover:scale-105 transition shadow-2xl disabled:opacity-70 disabled:hover:scale-100"
+          >
+            {isLocating ? (
+              <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+            ) : (
+              <FontAwesomeIcon icon={faMapMarkerAlt} />
+            )}
+            {isLocating ? 'Locating...' : 'Explore Near Me'}
+          </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-8 md:gap-16 text-center mb-20 md:mb-0">
-            <div><h3 className="text-3xl md:text-4xl font-bold">5000+</h3><p className="text-xs md:text-sm opacity-80">Active Vendors</p></div>
-            <div><h3 className="text-3xl md:text-4xl font-bold">50K+</h3><p className="text-xs md:text-sm opacity-80">Happy Customers</p></div>
-            <div><h3 className="text-3xl md:text-4xl font-bold">15+</h3><p className="text-xs md:text-sm opacity-80">Cities</p></div>
-        </div>
+        {/* STATS */}
+        {/* <div className="grid grid-cols-3 gap-8 md:gap-16 text-center z-10"> */}
+          <div>
+            <h3 className="text-3xl md:text-4xl font-bold">{nearbyBusinesses.length}</h3>
+            <p className="text-xs md:text-sm opacity-80">Nearby Businesses</p>
+          </div>
+          {/* <div>
+            <h3 className="text-3xl md:text-4xl font-bold">50K+</h3>
+            <p className="text-xs md:text-sm opacity-80">Orders Completed</p>
+          </div>
+          <div>
+            <h3 className="text-3xl md:text-4xl font-bold">15+</h3>
+            <p className="text-xs md:text-sm opacity-80">Active Cities</p>
+          </div> */}
+        {/* </div> */}
 
+        {/* WAVE */}
         <div className="absolute bottom-0 w-full overflow-hidden leading-none">
-            <svg className="relative block w-[calc(100%+1.3px)] h-12.5 md:h-20 rotate-180" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-white"></path>
-            </svg>
+          <svg className="relative block w-[calc(100%+1.3px)] h-20 rotate-180" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-white"></path>
+          </svg>
         </div>
       </section>
 
-      {/* ================= 3. FEATURES SECTION ================= */}
+      {/* FEATURES SECTION */}
       <section className="py-20 bg-white px-6 md:px-10">
         <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Why Choose <span className="text-orange-500">StreetSync</span>?</h2>
-            <p className="text-gray-500">Connecting you with local vendors through technology</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-800">
+            Why Choose <span className="text-orange-500">StreetSync</span>?
+          </h2>
+          <p className="text-gray-500 text-lg">The future of hyperlocal marketplaces</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-            <FeatureCard icon={faMapMarkerAlt} title="Real-Time GPS" desc="Track their live location as they move through your area." />
-            <FeatureCard icon={faBell} title="Smart Notifications" desc="Get notified when your favorite vendors go live." />
-            <FeatureCard icon={faBagShopping} title="Pre-Order" desc="Order ahead and pick up when ready. No more waiting." />
-            <FeatureCard icon={faBolt} title="Instant Updates" desc="Real-time menu updates and availability status." />
+          <FeatureCard
+            icon={faMapMarkerAlt}
+            title="Live GPS"
+            desc="Track businesses and vendors in real-time around your area."
+          />
+          <FeatureCard
+            icon={faBell}
+            title="Instant Alerts"
+            desc="Receive notifications when businesses go live nearby."
+          />
+          <FeatureCard
+            icon={faBagShopping}
+            title="Smart Ordering"
+            desc="Order products and services instantly from local businesses."
+          />
+          <FeatureCard
+            icon={faBolt}
+            title="Real-Time Updates"
+            desc="Live availability, stock updates, and marketplace activity."
+          />
         </div>
       </section>
 
-      {/* ================= 4. MAP SECTION ================= */}
+      {/* HOW IT WORKS */}
+      <section className="py-24 bg-[#fffaf5] px-6 md:px-10 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-72 h-72 bg-orange-100 rounded-full blur-3xl opacity-40"></div>
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-yellow-100 rounded-full blur-3xl opacity-40"></div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-20">
+            <span className="px-4 py-1 rounded-full bg-orange-100 text-orange-500 text-sm font-bold tracking-wide uppercase">
+              Simple Process
+            </span>
+            <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 mt-6 leading-tight">
+              How <span className="text-orange-500">StreetSync</span> Works
+            </h2>
+            <p className="text-gray-500 max-w-2xl mx-auto mt-5 text-lg leading-relaxed">
+              Discover nearby businesses, connect instantly, and explore your local marketplace ecosystem.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <HowCard
+              number="01"
+              icon={faMapMarkerAlt}
+              color="orange"
+              title="Discover Nearby"
+              desc="Allow location access to instantly discover businesses, services, and marketplaces around you."
+            />
+            <HowCard
+              number="02"
+              icon={faBagShopping}
+              color="yellow"
+              title="Browse & Connect"
+              desc="Explore products, services, live availability, categories, ratings, and marketplace updates."
+            />
+            <HowCard
+              number="03"
+              icon={faBolt}
+              color="green"
+              title="Order Instantly"
+              desc="Place orders, contact businesses, or directly visit stores with real-time updates."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* MAP SECTION */}
       <section className="bg-gray-50 py-20 px-4 md:px-10">
         <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">Discover Vendors <span className="text-yellow-500">Near You</span></h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-800">
+            Explore Businesses <span className="text-orange-500">Near You</span>
+          </h2>
         </div>
 
-        <div className="flex flex-col lg:flex-row h-150 max-w-7xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-            <div className="w-full lg:w-2/3 h-125 lg:h-full relative z-0">
-                 <MapContainer center={[28.6139, 77.2090]} zoom={13} style={{ height: "100%", width: "100%" }}>
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap' />
-                    <Marker position={[28.6139, 77.2090]}><Popup>Sharma Ji Chaat</Popup></Marker>
-                 </MapContainer>
+        <div className="flex flex-col lg:flex-row h-[650px] max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
+          
+          {/* MAP */}
+          <div className="w-full lg:w-2/3 h-[500px] lg:h-full relative z-0">
+            {currentLocation && (
+              <MapContainer center={currentLocation} zoom={14} style={{ height: '100%', width: '100%' }}>
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution="&copy; OpenStreetMap"
+                />
+
+                <MapUpdater center={currentLocation} />
+
+                <Marker position={currentLocation}>
+                  <Popup><b>You are here!</b></Popup>
+                </Marker>
+
+                {nearbyBusinesses.map((business) =>
+                  business.location && business.location.lat ? (
+                    <Marker key={business._id} position={[business.location.lat, business.location.lng]}>
+                      <Popup>
+                        <strong>{business.shopName}</strong><br />
+                        {business.category}
+                      </Popup>
+                    </Marker>
+                  ) : null
+                )}
+              </MapContainer>
+            )}
+
+            {isLocating && (
+              <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-[1000] flex items-center justify-center">
+                <div className="bg-white px-6 py-4 rounded-full shadow-lg font-bold text-orange-500 flex items-center gap-3">
+                  <FontAwesomeIcon icon={faSpinner} className="animate-spin" /> Locating you...
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* BUSINESS LIST */}
+          <div className="w-full lg:w-1/3 h-[500px] lg:h-full overflow-y-auto p-6 bg-white border-l border-gray-200">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-bold text-lg text-gray-700">Nearby Businesses</h3>
+              <span className="text-sm font-bold text-orange-500 bg-orange-50 px-3 py-1 rounded-full">
+                {nearbyBusinesses.length} found
+              </span>
             </div>
 
-            <div className="w-full lg:w-1/3 h-125 lg:h-full overflow-y-auto p-6 bg-white border-l border-gray-200">
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="font-bold text-lg text-gray-700">Nearby Vendors (6)</h3>
-                </div>
-
-                <div className="space-y-4">
-                    <VendorCard name="Sharma Ji Chaat" rating="4.8" orders="2,340" image="https://images.unsplash.com/photo-1567188040706-fb8d89590769?q=80&w=200" status="Live" />
-                    <VendorCard name="Momos King" rating="4.7" orders="3,120" image="https://images.unsplash.com/photo-1626776877555-408484e1837a?q=80&w=200" status="Offline" />
-                    <VendorCard name="Fruit Cart" rating="4.6" orders="980" image="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=200" status="Live" />
-                </div>
+            <div className="space-y-4">
+              {nearbyBusinesses.length > 0 ? (
+                nearbyBusinesses.map((business) => (
+                  <BusinessCard
+                    key={business._id}
+                    name={business.shopName}
+                    category={business.category}
+                    rating={business.rating || 'New'}
+                    orders={business.totalOrders || 0}
+                    image={business.profilePic || 'https://images.unsplash.com/photo-1481437156560-3205f6a55735?q=80&w=1200'}
+                    status={business.isLive ? 'Live' : 'Offline'}
+                    onClick={() => navigate(`/vendor/${business._id}`)}
+                  />
+                ))
+              ) : (
+                <p className="text-gray-400 text-sm text-center pt-10">
+                  {isLocating ? 'Searching nearby businesses...' : 'No businesses found nearby right now.'}
+                </p>
+              )}
             </div>
+          </div>
         </div>
       </section>
 
-      {/* ================= 5. FOOTER ================= */}
       <Footer />
-
     </div>
   );
 };
 
-// --- Page-Specific Sub Components ---
+// --- SUB COMPONENTS ---
 
+// FEATURE CARD
 const FeatureCard = ({ icon, title, desc }) => (
-    <div className="p-8 bg-white rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300 border border-gray-100">
-        <div className="w-14 h-14 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center text-2xl mb-6">
-            <FontAwesomeIcon icon={icon} />
-        </div>
-        <h3 className="font-bold text-lg mb-3 text-gray-800">{title}</h3>
-        <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+  <div className="p-8 bg-white rounded-3xl shadow-sm hover:shadow-2xl hover:-translate-y-2 transition duration-300 border border-gray-100">
+    <div className="w-16 h-16 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center text-2xl mb-6">
+      <FontAwesomeIcon icon={icon} />
     </div>
+    <h3 className="font-bold text-xl mb-3 text-gray-800">{title}</h3>
+    <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+  </div>
 );
 
-const VendorCard = ({ name, rating, orders, image, status }) => (
-    <div className="flex gap-4 p-4 border rounded-xl hover:shadow-md transition cursor-pointer bg-white">
-        <div className="w-20 h-20 rounded-lg overflow-hidden relative shrink-0">
-            <img src={image} alt={name} className="w-full h-full object-cover" />
-            <span className={`absolute top-1 left-1 px-1.5 py-0.5 text-[10px] font-bold rounded-sm text-white ${status === 'Live' ? 'bg-green-500' : 'bg-gray-400'}`}>
-                {status === 'Live' ? 'LIVE' : 'OFF'}
-            </span>
-        </div>
-        <div className="flex flex-col justify-center">
-            <p className="text-[10px] uppercase text-orange-400 font-bold mb-1">Street Food</p>
-            <h4 className="font-bold text-gray-800 text-sm mb-1">{name}</h4>
-            <div className="flex items-center text-xs text-gray-500 gap-2">
-                <span className="flex items-center text-yellow-500 font-bold">
-                  <FontAwesomeIcon icon={faStar} className="mr-1"/> {rating}
-                </span>
-                <span>• {orders} orders</span>
-            </div>
-        </div>
+// HOW CARD
+const HowCard = ({ number, icon, title, desc, color }) => {
+  const colors = {
+    orange: {
+      bg: 'bg-orange-500',
+      text: 'text-orange-100',
+      border: 'border-orange-100',
+      gradient: 'from-orange-50 to-white',
+    },
+    yellow: {
+      bg: 'bg-yellow-400',
+      text: 'text-yellow-100',
+      border: 'border-yellow-100',
+      gradient: 'from-yellow-50 to-white',
+    },
+    green: {
+      bg: 'bg-green-500',
+      text: 'text-green-100',
+      border: 'border-green-100',
+      gradient: 'from-green-50 to-white',
+    },
+  };
+
+  return (
+    <div className={`group relative bg-gradient-to-br ${colors[color].gradient} border ${colors[color].border} rounded-3xl p-10 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2`}>
+      <div className={`absolute top-5 right-5 text-6xl font-black ${colors[color].text}`}>
+        {number}
+      </div>
+      <div className={`w-20 h-20 rounded-2xl ${colors[color].bg} text-white flex items-center justify-center text-3xl shadow-lg mb-8`}>
+        <FontAwesomeIcon icon={icon} />
+      </div>
+      <h3 className="text-2xl font-bold text-gray-800 mb-4">{title}</h3>
+      <p className="text-gray-500 leading-relaxed">{desc}</p>
     </div>
+  );
+};
+
+// BUSINESS CARD
+const BusinessCard = ({ name, category, rating, orders, image, status, onClick }) => (
+  <div onClick={onClick} className="flex gap-4 p-4 border rounded-2xl hover:shadow-lg hover:-translate-y-1 transition cursor-pointer bg-white group">
+    <div className="w-20 h-20 rounded-xl overflow-hidden relative shrink-0">
+      <img src={image} alt={name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      <span className={`absolute top-2 left-2 px-2 py-1 text-[10px] font-bold rounded-full text-white shadow-sm ${status === 'Live' ? 'bg-green-500' : 'bg-gray-400'}`}>
+        {status === 'Live' ? 'LIVE' : 'OFF'}
+      </span>
+    </div>
+    <div className="flex flex-col justify-center flex-1">
+      <p className="text-[10px] uppercase text-orange-400 font-bold mb-1 capitalize tracking-wide">{category}</p>
+      <h4 className="font-bold text-gray-800 text-sm mb-1">{name}</h4>
+      <div className="flex items-center text-xs text-gray-500 gap-2 flex-wrap">
+        <span className="flex items-center text-yellow-500 font-bold">
+          <FontAwesomeIcon icon={faStar} className="mr-1" /> {rating}
+        </span>
+        <span>• {orders} orders</span>
+      </div>
+    </div>
+  </div>
 );
 
 export default Home;
