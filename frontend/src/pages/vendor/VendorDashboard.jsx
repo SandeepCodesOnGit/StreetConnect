@@ -22,8 +22,8 @@ import { useSocketContext } from "../../socket/SocketContext";
 import MenuList from "../../components/vendor/MenuList";
 import AddMenu from "../../components/vendor/AddMenu";
 import LiveOrders from "../../components/vendor/LiveOrders";
-import AutoMenuGenerator from "../../components/vendor/AutoMenuGenerator";
-import DemandHeatmap from "../../components/vendor/DemandHeatmap";
+// import AutoMenuGenerator from "../../components/vendor/AutoMenuGenerator";
+// import DemandHeatmap from "../../components/vendor/DemandHeatmap";
 
 const VendorDashboard = () => {
   const { vendorId } = useParams();
