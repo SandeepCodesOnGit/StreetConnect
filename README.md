@@ -3,27 +3,28 @@ StreetSync is a real-time, location-based ecosystem built on the MERN stack. It 
 
 # Key Features
 ## Authentication & Access
-### ControlDual-Role Engine: Dedicated workflows and permissions for Customers and Street Vendors.
-### JWT Identity Gate: Session persistence and secure authorization handled via secure HTTP-Only cookies/Bearer tokens.
-### Input Validation: Strict client and server-side verification using robust validation schemas (Joi).
+ControlDual-Role Engine: Dedicated workflows and permissions for Customers and Street Vendors.
+JWT Identity Gate: Session persistence and secure authorization handled via secure HTTP-Only cookies/Bearer tokens.
+Input Validation: Strict client and server-side verification using robust validation schemas (Joi).
   
 ## Geospatial Telemetry
-### Real-Time GPS Tracking: Live vendor tracking powered by bidirectional event-driven Socket.io web sockets.
-### Proximity Computations: Rapid local search utilizing MongoDB's advanced 2dsphere index to perform spatial queries within target radiuses.
-### Interactive Mapping: Highly responsive mapping views utilizing modern canvas markers (Leaflet.js).
+Real-Time GPS Tracking: Live vendor tracking powered by bidirectional event-driven Socket.io web sockets.
+Proximity Computations: Rapid local search utilizing MongoDB's advanced 2dsphere index to perform spatial queries within target radiuses.
+Interactive Mapping: Highly responsive mapping views utilizing modern canvas markers (Leaflet.js).
   
 ## Operations & Transactions
-### Digital Storefront (CRUD): Complete management tools for vendor inventories utilizing embedded document structures.
-### Order State Machine: End-to-end transaction flows tracking order progression through distinct lifecycles (Pending -> Preparing -> Ready -> Completed).
-### Instant Dashboards: Reactive vendor panels for incoming order queues and toggleable live status alerts.
+Digital Storefront (CRUD): Complete management tools for vendor inventories utilizing embedded document structures.
+Order State Machine: End-to-end transaction flows tracking order progression through distinct lifecycles (Pending -> Preparing -> Ready -> Completed).
+Instant Dashboards: Reactive vendor panels for incoming order queues and toggleable live status alerts.
 
-Tech Stack
-Layer                    Technologies Used
-Frontend UI/UX           React.js, Tailwind CSS, Leaflet.js
-Application Layer        Node.js, Express.js
-Real-time Pipeline       Socket.io (WebSockets)
-Database Tier            MongoDB, Mongoose ORM
-Security & Validation    JSON Web Tokens (JWT), Bcrypt, Joi
+# Tech Stack
+| Layer | Technologies Used |
+| :--- | :--- |
+| **Frontend UI/UX** | React.js, Tailwind CSS, Leaflet.js |
+| **Application Layer** | Node.js, Express.js |
+| **Real-time Pipeline** | Socket.io (WebSockets) |
+| **Database Tier** | MongoDB, Mongoose ORM |
+| **Security & Validation** | JSON Web Tokens (JWT), Bcrypt, Joi |
 
 # Quick Start Guide
 ## Prerequisites
