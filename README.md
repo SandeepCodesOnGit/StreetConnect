@@ -25,29 +25,33 @@ Real-time Pipeline       Socket.io (WebSockets)
 Database Tier            MongoDB, Mongoose ORM
 Security & Validation    JSON Web Tokens (JWT), Bcrypt, Joi
 
-Quick Start Guide
-Prerequisites
+# Quick Start Guide
+## Prerequisites
 Ensure you have the following installed locally:
-  Node.js (v18.x or higher)
-  MongoDB (Local instance or Atlas connection string)Repository SetupBash# Clone the repository
+  ### Node.js (v18.x or higher)
+  ### MongoDB (Local instance or Atlas connection string)
+  Repository Setup
+              
+      Bash
   
-    git clone https://github.com/your-username/StreetSync.git
-    cd StreetSync
+      # Clone the repository
+      git clone https://github.com/your-username/StreetSync.git
+      cd StreetSync
 
-Backend Configuration
-Navigate to the server folder: cd server
-Create a .env file in the root of the server directory:
+## Backend Configuration
+### Navigate to the server folder: cd server
+### Create a .env file in the root of the server directory:
 
-Code snippet
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/streetsync
-JWT_SECRET=your_super_secure_jwt_secret_key
-CORS_ORIGIN=http://localhost:3000
+    Code snippet
+    PORT=5000
+    MONGO_URI=mongodb://localhost:27017/streetsync
+    JWT_SECRET=your_super_secure_jwt_secret_key
+    CORS_ORIGIN=http://localhost:3000
 
-Install dependencies and start the backend:
-Bash
-npm install
-npm run dev
+### Install dependencies and start the backend:
+    Bash
+    npm install
+    npm run dev
 
 Frontend Configuration
 Open a new terminal window and navigate to the client folder: cd client
