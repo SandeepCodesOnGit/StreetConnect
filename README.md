@@ -1,21 +1,21 @@
-StreetSync
+# StreetSync
 StreetSync is a real-time, location-based ecosystem built on the MERN stack. It bridges the gap between digital consumers and mobile street vendors by establishing low-latency telemetry pipelines and dynamic order management. By integrating live geolocation streaming with traditional web storefronts, StreetSync provides street vendors with the digital infrastructure needed to compete in a modern marketplace.
 
-Key Features
-Authentication & Access
-  ControlDual-Role Engine: Dedicated workflows and permissions for Customers and Street Vendors.
-  JWT Identity Gate: Session persistence and secure authorization handled via secure HTTP-Only cookies/Bearer tokens.
-  Input Validation: Strict client and server-side verification using robust validation schemas (Joi).
+# Key Features
+## Authentication & Access
+### ControlDual-Role Engine: Dedicated workflows and permissions for Customers and Street Vendors.
+### JWT Identity Gate: Session persistence and secure authorization handled via secure HTTP-Only cookies/Bearer tokens.
+### Input Validation: Strict client and server-side verification using robust validation schemas (Joi).
   
-Geospatial Telemetry
-  Real-Time GPS Tracking: Live vendor tracking powered by bidirectional event-driven Socket.io web sockets.
-  Proximity Computations: Rapid local search utilizing MongoDB's advanced 2dsphere index to perform spatial queries within target radiuses.
-  Interactive Mapping: Highly responsive mapping views utilizing modern canvas markers (Leaflet.js).
+## Geospatial Telemetry
+### Real-Time GPS Tracking: Live vendor tracking powered by bidirectional event-driven Socket.io web sockets.
+### Proximity Computations: Rapid local search utilizing MongoDB's advanced 2dsphere index to perform spatial queries within target radiuses.
+### Interactive Mapping: Highly responsive mapping views utilizing modern canvas markers (Leaflet.js).
   
-Operations & Transactions
-Digital Storefront (CRUD): Complete management tools for vendor inventories utilizing embedded document structures.
-Order State Machine: End-to-end transaction flows tracking order progression through distinct lifecycles (Pending -> Preparing -> Ready -> Completed).
-Instant Dashboards: Reactive vendor panels for incoming order queues and toggleable live status alerts.
+## Operations & Transactions
+### Digital Storefront (CRUD): Complete management tools for vendor inventories utilizing embedded document structures.
+### Order State Machine: End-to-end transaction flows tracking order progression through distinct lifecycles (Pending -> Preparing -> Ready -> Completed).
+### Instant Dashboards: Reactive vendor panels for incoming order queues and toggleable live status alerts.
 
 Tech Stack
 Layer                    Technologies Used
